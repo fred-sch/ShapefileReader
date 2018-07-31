@@ -12,6 +12,7 @@
 
 import Foundation
 import CoreGraphics
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -134,7 +135,7 @@ class DBFReader {
     }
     
     deinit {
-        self.fileHandle.closeFile()
+        self.fileHandle?.closeFile()
     }
     
     func readHeader() throws {

@@ -27,17 +27,33 @@
 		03B7088A1CA5F08700F3B3A0 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B708891CA5F08700F3B3A0 /* CanvasView.swift */; };
 		03B7088C1CA5F6D200F3B3A0 /* ShapefileBitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B7088B1CA5F6D200F3B3A0 /* ShapefileBitmap.swift */; };
 		03B708931CA73C2400F3B3A0 /* ShapefileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B708921CA73C2400F3B3A0 /* ShapefileView.swift */; };
+		EC6FD9B42110ED2200DACC6F /* rgb.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = EC6FD9B32110E37600DACC6F /* rgb.txt */; };
+		EC6FD9B72110F2CB00DACC6F /* plz_p1.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03B708881CA5B1A000F3B3A0 /* plz_p1.txt */; };
+		EC6FD9BA2110F51700DACC6F /* g2g15.shx in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45EA1CA3E0CC006C4622 /* g2g15.shx */; };
+		EC6FD9BB2110F51700DACC6F /* g2g15.shp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45EB1CA3E0CC006C4622 /* g2g15.shp */; };
+		EC6FD9BC2110F51700DACC6F /* g2g15.dbf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45EC1CA3E0CC006C4622 /* g2g15.dbf */; };
+		EC6FD9BD2110F51700DACC6F /* g1k15.dbf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45E71CA3E07E006C4622 /* g1k15.dbf */; };
+		EC6FD9BE2110F51700DACC6F /* g1k15.shp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45E81CA3E07E006C4622 /* g1k15.shp */; };
+		EC6FD9BF2110F51700DACC6F /* g1k15.shx in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45E91CA3E07E006C4622 /* g1k15.shx */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		035D0FEC1C9E1EA200BC89C8 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
 			files = (
+				EC6FD9BA2110F51700DACC6F /* g2g15.shx in CopyFiles */,
+				EC6FD9BB2110F51700DACC6F /* g2g15.shp in CopyFiles */,
+				EC6FD9BC2110F51700DACC6F /* g2g15.dbf in CopyFiles */,
+				EC6FD9BD2110F51700DACC6F /* g1k15.dbf in CopyFiles */,
+				EC6FD9BE2110F51700DACC6F /* g1k15.shp in CopyFiles */,
+				EC6FD9BF2110F51700DACC6F /* g1k15.shx in CopyFiles */,
+				EC6FD9B72110F2CB00DACC6F /* plz_p1.txt in CopyFiles */,
+				EC6FD9B42110ED2200DACC6F /* rgb.txt in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -71,6 +87,7 @@
 		03B708891CA5F08700F3B3A0 /* CanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CanvasView.swift; path = ../vendor/CanvasView.swift; sourceTree = "<group>"; };
 		03B7088B1CA5F6D200F3B3A0 /* ShapefileBitmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapefileBitmap.swift; sourceTree = "<group>"; };
 		03B708921CA73C2400F3B3A0 /* ShapefileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapefileView.swift; sourceTree = "<group>"; };
+		EC6FD9B32110E37600DACC6F /* rgb.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rgb.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +121,7 @@
 		0344B4E81C9EFB28001DCDAB /* data */ = {
 			isa = PBXGroup;
 			children = (
+				EC6FD9B32110E37600DACC6F /* rgb.txt */,
 				03B708871CA5AEE700F3B3A0 /* data_sources.txt */,
 				03B708881CA5B1A000F3B3A0 /* plz_p1.txt */,
 				032E45ED1CA3E12A006C4622 /* Conditions_d'exploitation-Copyright_OFS_GEOSTAT.pdf */,

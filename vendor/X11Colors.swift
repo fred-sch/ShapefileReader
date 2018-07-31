@@ -103,7 +103,8 @@ class X11Colors {
     
     var colorList = NSColorList(name: "X11")
     
-    init(path:String = "/opt/X11/share/X11/rgb.txt", namePrettifier:@escaping (_ original:String) -> (String)) {
+    // https://cgit.freedesktop.org/xorg/app/rgb/plain/rgb.txt
+    init(path:String = Bundle.main.path(forResource: "rgb", ofType: "txt")!, namePrettifier:@escaping (_ original:String) -> (String)) {
         
         let contents = try! String(contentsOfFile: path, encoding: String.Encoding.utf8)
         
