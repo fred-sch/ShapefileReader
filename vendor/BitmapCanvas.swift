@@ -103,13 +103,13 @@ class BitmapCanvas {
             samplesPerPixel:4,
             hasAlpha:true,
             isPlanar:false,
-            colorSpaceName:NSDeviceRGBColorSpace,
+            colorSpaceName:NSColorSpaceName.deviceRGB,
             bytesPerRow:width*4,
             bitsPerPixel:32)!
         
         self.context = NSGraphicsContext(bitmapImageRep: bitmapImageRep)!
         
-        NSGraphicsContext.setCurrent(context)
+        NSGraphicsContext.current = context
         
         setAllowsAntialiasing(false)
         
@@ -185,7 +185,7 @@ class BitmapCanvas {
         
         let color = color_.color
         
-        guard let normalizedColor = color.usingColorSpaceName(NSCalibratedRGBColorSpace) else {
+        guard let normalizedColor = color.usingColorSpaceName(NSColorSpaceName.calibratedRGB) else {
             print("-- cannot normalize color \(color)")
             return
         }
@@ -222,7 +222,7 @@ class BitmapCanvas {
 
         let pixelBuffer = data.assumingMemoryBound(to: UInt8.self)
         
-        guard let newColor = rawNewColor.usingColorSpaceName(NSCalibratedRGBColorSpace) else {
+        guard let newColor = rawNewColor.usingColorSpaceName(NSColorSpaceName.calibratedRGB) else {
             print("-- cannot normalize color \(rawNewColor)")
             return
         }
@@ -410,11 +410,11 @@ class BitmapCanvas {
     }
     
     fileprivate func degreesToRadians(_ x:CGFloat) -> CGFloat {
-        return (M_PI * x / 180.0)
+        return (.pi * x / 180.0)
     }
     
     func save(_ path:String, open:Bool=false) {
-        guard let data = bitmapImageRep.representation(using: .PNG, properties: [:]) else {
+        guard let data = bitmapImageRep.representation(using: .png, properties: [:]) else {
             print("\(#file) \(#function) cannot get PNG data from bitmap")
             return
         }
@@ -422,7 +422,7 @@ class BitmapCanvas {
         do {
             try data.write(to: URL(fileURLWithPath: path), options: [])
             if open {
-                NSWorkspace.shared().openFile(path)
+                NSWorkspace.shared.openFile(path)
             }
         } catch let e {
             print(e)
@@ -433,8 +433,8 @@ class BitmapCanvas {
         let maxSize : CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: font.pointSize)
         let textRect : CGRect = text.boundingRect(
             with: maxSize,
-            options: NSStringDrawingOptions.usesLineFragmentOrigin,
-            attributes: [NSFontAttributeName: font],
+            options: NSString.DrawingOptions.usesLineFragmentOrigin,
+            attributes: [NSAttributedStringKey.font: font],
             context: nil)
         return textRect.size.width
     }
@@ -473,8 +473,8 @@ class BitmapCanvas {
         let color = color_.color
         
         let attr = [
-            NSFontAttributeName:font,
-            NSForegroundColorAttributeName:color
+            NSAttributedStringKey.font:font,
+            NSAttributedStringKey.foregroundColor:color
         ]
         
         context.saveGraphicsState()

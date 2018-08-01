@@ -103,9 +103,9 @@ func unhexlify(_ string:String) -> Data? {
         return nil
     }
     
-    var data = Data(capacity: s.characters.count / 2)
+    var data = Data(capacity: s.count / 2)
     
-    for i in stride(from: 0, to:s.characters.count, by:2) {
+    for i in stride(from: 0, to: s.count, by: 2) {
         let byteString = s[i, i+2]
         let byte = UInt8(byteString.withCString { strtoul($0, nil, 16) })
         data.append([byte] as [UInt8], count: 1)
@@ -131,7 +131,7 @@ func readFloatingPointType<T:DataConvertible>(_ type:T.Type, bytes:[UInt8], loc:
 
 func isBigEndianFromMandatoryByteOrderFirstCharacter(_ format:String) -> Bool {
     
-    guard let firstChar = format.characters.first else { assertionFailure("empty format"); return false }
+    guard let firstChar = format.first else { assertionFailure("empty format"); return false }
     
     let s = String(firstChar) as NSString
     let c = s.substring(to: 1)
@@ -155,7 +155,7 @@ func numberOfBytesInFormat(_ format:String) -> Int {
     
     var mutableFormat = format
     
-    while mutableFormat.characters.count > 0 {
+    while !mutableFormat.isEmpty {
         
         let c = mutableFormat.remove(at: mutableFormat.startIndex)
         
@@ -247,8 +247,8 @@ func pack(_ format:String, _ objects:[Any], _ stringEncoding:String.Encoding=Str
     
     var n = 0 // repeat counter
     
-    while mutableFormat.characters.count > 0 {
-        
+    while !mutableFormat.isEmpty {
+
         let c = mutableFormat.remove(at: mutableFormat.startIndex)
         
         if let i = Int(String(c)) , 0...9 ~= i {
@@ -302,19 +302,19 @@ func pack(_ format:String, _ objects:[Any], _ stringEncoding:String.Encoding=Str
                 }
                 bytes = data.bytes
             case "b":
-                bytes = Int8(truncatingBitPattern:o as! Int).data.bytes
+                bytes = Int8(truncatingIfNeeded:o as! Int).data.bytes
             case "h":
-                bytes = Int16(truncatingBitPattern:o as! Int).data.bytes
+                bytes = Int16(truncatingIfNeeded:o as! Int).data.bytes
             case "i", "l":
-                bytes = Int32(truncatingBitPattern:o as! Int).data.bytes
+                bytes = Int32(truncatingIfNeeded:o as! Int).data.bytes
             case "q", "Q":
                 bytes = Int64(o as! Int).data.bytes
             case "B":
-                bytes = UInt8(truncatingBitPattern:o as! Int).data.bytes
+                bytes = UInt8(truncatingIfNeeded:o as! Int).data.bytes
             case "H":
-                bytes = UInt16(truncatingBitPattern:o as! Int).data.bytes
+                bytes = UInt16(truncatingIfNeeded:o as! Int).data.bytes
             case "I", "L":
-                bytes = UInt32(truncatingBitPattern:o as! Int).data.bytes
+                bytes = UInt32(truncatingIfNeeded:o as! Int).data.bytes
             case "f":
                 bytes = Float32(o as! Double).data.bytes
             case "d":
@@ -358,8 +358,8 @@ func unpack(_ format:String, _ data:Data, _ stringEncoding:String.Encoding=Strin
     
     mutableFormat.remove(at: mutableFormat.startIndex) // consume byte-order specifier
     
-    while mutableFormat.characters.count > 0 {
-        
+    while !mutableFormat.isEmpty {
+
         let c = mutableFormat.remove(at: mutableFormat.startIndex)
         
         if let i = Int(String(c)) , 0...9 ~= i {

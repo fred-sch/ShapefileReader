@@ -43,7 +43,7 @@ class ShapefileView : CanvasView {
         
         let shapefileReader = try! ShapefileReader(path: Bundle.main.path(forResource: "g2g15", ofType: "shp")!)
         
-        let context = unsafeBitCast(NSGraphicsContext.current()!.graphicsPort, to: CGContext.self)
+        let context = unsafeBitCast(NSGraphicsContext.current!.graphicsPort, to: CGContext.self)
         
         context.saveGState()
         

@@ -313,7 +313,7 @@ func drawZIPCodesPDF() throws {
     let path = "/tmp/switzerland_zip.pdf"
     let success = (try? pdfData.write(to: URL(fileURLWithPath: path), options: [.atomic])) != nil
     if success {
-        NSWorkspace.shared().openFile(path)
+        NSWorkspace.shared.openFile(path)
     }
 }
 
