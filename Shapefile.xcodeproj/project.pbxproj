@@ -27,14 +27,12 @@
 		03B7088A1CA5F08700F3B3A0 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B708891CA5F08700F3B3A0 /* CanvasView.swift */; };
 		03B7088C1CA5F6D200F3B3A0 /* ShapefileBitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B7088B1CA5F6D200F3B3A0 /* ShapefileBitmap.swift */; };
 		03B708931CA73C2400F3B3A0 /* ShapefileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B708921CA73C2400F3B3A0 /* ShapefileView.swift */; };
+		9617339999F4561ABBBDC759 /* libPods-ShapefileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 682F07F4101A9CA7376D9BD1 /* libPods-ShapefileTests.a */; };
+		EC3ABFDA2112365A00C3FAAF /* g1k15.zip in CopyFiles */ = {isa = PBXBuildFile; fileRef = EC3ABFD8211235D000C3FAAF /* g1k15.zip */; };
+		EC3ABFDB2112365A00C3FAAF /* g2g15.zip in CopyFiles */ = {isa = PBXBuildFile; fileRef = EC3ABFD9211235D000C3FAAF /* g2g15.zip */; };
 		EC6FD9B42110ED2200DACC6F /* rgb.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = EC6FD9B32110E37600DACC6F /* rgb.txt */; };
 		EC6FD9B72110F2CB00DACC6F /* plz_p1.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03B708881CA5B1A000F3B3A0 /* plz_p1.txt */; };
-		EC6FD9BA2110F51700DACC6F /* g2g15.shx in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45EA1CA3E0CC006C4622 /* g2g15.shx */; };
-		EC6FD9BB2110F51700DACC6F /* g2g15.shp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45EB1CA3E0CC006C4622 /* g2g15.shp */; };
-		EC6FD9BC2110F51700DACC6F /* g2g15.dbf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45EC1CA3E0CC006C4622 /* g2g15.dbf */; };
-		EC6FD9BD2110F51700DACC6F /* g1k15.dbf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45E71CA3E07E006C4622 /* g1k15.dbf */; };
-		EC6FD9BE2110F51700DACC6F /* g1k15.shp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45E81CA3E07E006C4622 /* g1k15.shp */; };
-		EC6FD9BF2110F51700DACC6F /* g1k15.shx in CopyFiles */ = {isa = PBXBuildFile; fileRef = 032E45E91CA3E07E006C4622 /* g1k15.shx */; };
+		F6C331EEC8A79FA344A0F97A /* libPods-Shapefile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F61E21938E4107104871FA35 /* libPods-Shapefile.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,12 +42,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				EC6FD9BA2110F51700DACC6F /* g2g15.shx in CopyFiles */,
-				EC6FD9BB2110F51700DACC6F /* g2g15.shp in CopyFiles */,
-				EC6FD9BC2110F51700DACC6F /* g2g15.dbf in CopyFiles */,
-				EC6FD9BD2110F51700DACC6F /* g1k15.dbf in CopyFiles */,
-				EC6FD9BE2110F51700DACC6F /* g1k15.shp in CopyFiles */,
-				EC6FD9BF2110F51700DACC6F /* g1k15.shx in CopyFiles */,
+				EC3ABFDA2112365A00C3FAAF /* g1k15.zip in CopyFiles */,
+				EC3ABFDB2112365A00C3FAAF /* g2g15.zip in CopyFiles */,
 				EC6FD9B72110F2CB00DACC6F /* plz_p1.txt in CopyFiles */,
 				EC6FD9B42110ED2200DACC6F /* rgb.txt in CopyFiles */,
 			);
@@ -58,12 +52,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		032E45E71CA3E07E006C4622 /* g1k15.dbf */ = {isa = PBXFileReference; lastKnownFileType = file; path = g1k15.dbf; sourceTree = "<group>"; };
-		032E45E81CA3E07E006C4622 /* g1k15.shp */ = {isa = PBXFileReference; lastKnownFileType = file; path = g1k15.shp; sourceTree = "<group>"; };
-		032E45E91CA3E07E006C4622 /* g1k15.shx */ = {isa = PBXFileReference; lastKnownFileType = file; path = g1k15.shx; sourceTree = "<group>"; };
-		032E45EA1CA3E0CC006C4622 /* g2g15.shx */ = {isa = PBXFileReference; lastKnownFileType = file; path = g2g15.shx; sourceTree = "<group>"; };
-		032E45EB1CA3E0CC006C4622 /* g2g15.shp */ = {isa = PBXFileReference; lastKnownFileType = file; path = g2g15.shp; sourceTree = "<group>"; };
-		032E45EC1CA3E0CC006C4622 /* g2g15.dbf */ = {isa = PBXFileReference; lastKnownFileType = file; path = g2g15.dbf; sourceTree = "<group>"; };
 		032E45ED1CA3E12A006C4622 /* Conditions_d'exploitation-Copyright_OFS_GEOSTAT.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Conditions_d'exploitation-Copyright_OFS_GEOSTAT.pdf"; sourceTree = "<group>"; };
 		0344B4DD1C9EEAFF001DCDAB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0344B4DF1C9EFB02001DCDAB /* BinUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinUtils.swift; sourceTree = "<group>"; };
@@ -87,7 +75,15 @@
 		03B708891CA5F08700F3B3A0 /* CanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CanvasView.swift; path = ../vendor/CanvasView.swift; sourceTree = "<group>"; };
 		03B7088B1CA5F6D200F3B3A0 /* ShapefileBitmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapefileBitmap.swift; sourceTree = "<group>"; };
 		03B708921CA73C2400F3B3A0 /* ShapefileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapefileView.swift; sourceTree = "<group>"; };
+		59135EBFFFF7CDC01ED52427 /* Pods-Shapefile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shapefile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Shapefile/Pods-Shapefile.debug.xcconfig"; sourceTree = "<group>"; };
+		682F07F4101A9CA7376D9BD1 /* libPods-ShapefileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ShapefileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CAC7B31C47E5A25E0143591C /* Pods-ShapefileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShapefileTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ShapefileTests/Pods-ShapefileTests.release.xcconfig"; sourceTree = "<group>"; };
+		E62CEB48845E85E3644FA322 /* Pods-Shapefile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shapefile.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shapefile/Pods-Shapefile.release.xcconfig"; sourceTree = "<group>"; };
+		EC3ABFD8211235D000C3FAAF /* g1k15.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = g1k15.zip; sourceTree = "<group>"; };
+		EC3ABFD9211235D000C3FAAF /* g2g15.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = g2g15.zip; sourceTree = "<group>"; };
 		EC6FD9B32110E37600DACC6F /* rgb.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rgb.txt; sourceTree = "<group>"; };
+		EE3CA3F71F64C136213187FD /* Pods-ShapefileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShapefileTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ShapefileTests/Pods-ShapefileTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F61E21938E4107104871FA35 /* libPods-Shapefile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shapefile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6C331EEC8A79FA344A0F97A /* libPods-Shapefile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9617339999F4561ABBBDC759 /* libPods-ShapefileTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,16 +119,12 @@
 		0344B4E81C9EFB28001DCDAB /* data */ = {
 			isa = PBXGroup;
 			children = (
+				EC3ABFD8211235D000C3FAAF /* g1k15.zip */,
+				EC3ABFD9211235D000C3FAAF /* g2g15.zip */,
 				EC6FD9B32110E37600DACC6F /* rgb.txt */,
 				03B708871CA5AEE700F3B3A0 /* data_sources.txt */,
 				03B708881CA5B1A000F3B3A0 /* plz_p1.txt */,
 				032E45ED1CA3E12A006C4622 /* Conditions_d'exploitation-Copyright_OFS_GEOSTAT.pdf */,
-				032E45EA1CA3E0CC006C4622 /* g2g15.shx */,
-				032E45EB1CA3E0CC006C4622 /* g2g15.shp */,
-				032E45EC1CA3E0CC006C4622 /* g2g15.dbf */,
-				032E45E71CA3E07E006C4622 /* g1k15.dbf */,
-				032E45E81CA3E07E006C4622 /* g1k15.shp */,
-				032E45E91CA3E07E006C4622 /* g1k15.shx */,
 			);
 			path = data;
 			sourceTree = "<group>";
@@ -145,6 +139,8 @@
 				035D0FF01C9E1EA200BC89C8 /* Shapefile */,
 				035D10051C9E1FB200BC89C8 /* ShapefileTests */,
 				035D0FEF1C9E1EA200BC89C8 /* Products */,
+				1085BC7B30E98BDAB03EA696 /* Pods */,
+				8609C73DBC1CA35F8EFE8F09 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -201,6 +197,26 @@
 			path = Shapefile;
 			sourceTree = "<group>";
 		};
+		1085BC7B30E98BDAB03EA696 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				59135EBFFFF7CDC01ED52427 /* Pods-Shapefile.debug.xcconfig */,
+				E62CEB48845E85E3644FA322 /* Pods-Shapefile.release.xcconfig */,
+				EE3CA3F71F64C136213187FD /* Pods-ShapefileTests.debug.xcconfig */,
+				CAC7B31C47E5A25E0143591C /* Pods-ShapefileTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		8609C73DBC1CA35F8EFE8F09 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F61E21938E4107104871FA35 /* libPods-Shapefile.a */,
+				682F07F4101A9CA7376D9BD1 /* libPods-ShapefileTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -208,6 +224,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 035D0FF51C9E1EA200BC89C8 /* Build configuration list for PBXNativeTarget "Shapefile" */;
 			buildPhases = (
+				E7D44C2DE0EDA74C1DF466D3 /* [CP] Check Pods Manifest.lock */,
 				035D0FEA1C9E1EA200BC89C8 /* Sources */,
 				035D0FEB1C9E1EA200BC89C8 /* Frameworks */,
 				035D0FEC1C9E1EA200BC89C8 /* CopyFiles */,
@@ -225,6 +242,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 035D10091C9E1FB200BC89C8 /* Build configuration list for PBXNativeTarget "ShapefileTests" */;
 			buildPhases = (
+				3C98059337BD6A2D563D71AD /* [CP] Check Pods Manifest.lock */,
 				035D10001C9E1FB200BC89C8 /* Sources */,
 				035D10011C9E1FB200BC89C8 /* Frameworks */,
 				035D10021C9E1FB200BC89C8 /* Resources */,
@@ -291,6 +309,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3C98059337BD6A2D563D71AD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ShapefileTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E7D44C2DE0EDA74C1DF466D3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Shapefile-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		035D0FEA1C9E1EA200BC89C8 /* Sources */ = {
@@ -369,7 +426,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -417,7 +474,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -426,7 +483,9 @@
 		};
 		035D0FF61C9E1EA200BC89C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 59135EBFFFF7CDC01ED52427 /* Pods-Shapefile.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};
@@ -434,7 +493,9 @@
 		};
 		035D0FF71C9E1EA200BC89C8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E62CEB48845E85E3644FA322 /* Pods-Shapefile.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};
@@ -442,6 +503,7 @@
 		};
 		035D100A1C9E1FB200BC89C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EE3CA3F71F64C136213187FD /* Pods-ShapefileTests.debug.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ShapefileTests/Info.plist;
@@ -454,6 +516,7 @@
 		};
 		035D100B1C9E1FB200BC89C8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CAC7B31C47E5A25E0143591C /* Pods-ShapefileTests.release.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ShapefileTests/Info.plist;

@@ -41,7 +41,7 @@ class ShapefileView : CanvasView {
         
         super.draw(dirtyRect)
         
-        let shapefileReader = try! ShapefileReader(path: Bundle.main.path(forResource: "g2g15", ofType: "shp")!)
+        let shapefileReader = try! ShapefileReader(url: Bundle.main.url(forResource: "g2g15", withExtension: "zip")!)
         
         let context = unsafeBitCast(NSGraphicsContext.current!.graphicsPort, to: CGContext.self)
         
@@ -78,7 +78,7 @@ class ShapefileView : CanvasView {
         }
         
         // g1k15.shp // cantons
-        let src = try! ShapefileReader(path: Bundle.main.path(forResource: "g1k15", ofType: "shp")!)
+        let src = try! ShapefileReader(url: Bundle.main.url(forResource: "g1k15", withExtension: "zip")!)
         
         for shape in src.shp.shapeGenerator() {
             self.shape(context, shape, NSColor.clear, lineWidth: 1.5)

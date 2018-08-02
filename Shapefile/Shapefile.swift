@@ -3,7 +3,7 @@
 //  Unpack
 //
 //  Created by nst on 12/03/16.
-//  Copyright © 2016 Nicolas Seriot. All rights reserved.
+//  Copyright © 2016-2018 Nicolas Seriot, Alexey Demin. All rights reserved.
 //
 
 // References:
@@ -12,6 +12,8 @@
 
 import Foundation
 import CoreGraphics
+import ZIPFoundation
+
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
@@ -129,8 +131,8 @@ class DBFReader {
     var recordLengthFromHeader : Int!
     var recordFormat : String!
     
-    init(path:String) throws {
-        self.fileHandle = try FileHandle(forReadingFrom: URL(fileURLWithPath: path))
+    init(url: URL) throws {
+        self.fileHandle = try FileHandle(forReadingFrom: url)
         try self.readHeader()
     }
     
@@ -320,8 +322,8 @@ class SHPReader {
     var measure : (m_min:Double, m_max:Double) = (0.0, 0.0)
     var shpLength : UInt64 = 0
     
-    init(path:String) throws {
-        self.fileHandle = try FileHandle(forReadingFrom: URL(fileURLWithPath: path))
+    init(url: URL) throws {
+        self.fileHandle = try FileHandle(forReadingFrom: url)
         try self.readHeader()
     }
     
@@ -502,8 +504,8 @@ class SHXReader {
         return shapeOffsets.count
     }
     
-    init(path:String) throws {
-        self.fileHandle = try FileHandle(forReadingFrom: URL(fileURLWithPath: path))
+    init(url: URL) throws {
+        self.fileHandle = try FileHandle(forReadingFrom: url)
         self.shapeOffsets = try self.readOffsets()
     }
     
@@ -556,22 +558,61 @@ class SHXReader {
     }
 }
 
+
+
 class ShapefileReader {
     
-    var shp : SHPReader!
-    var dbf : DBFReader? = nil
-    var shx : SHXReader? = nil
-    
-    var shapeName : String
-    
-    init(path:String) throws {
+    enum ShapefileReaderError: Error {
+        case shpNotFound(at: URL)
         
-        self.shapeName = (path as NSString).deletingPathExtension
-
-        self.shp = try SHPReader(path: "\(shapeName).shp")
-        self.dbf = try DBFReader(path: "\(shapeName).dbf")
-        self.shx = try SHXReader(path: "\(shapeName).shx")
+        var localizedDescription: String {
+            switch self {
+            case .shpNotFound(let url): return "Shapefile Not Found at \(url)"
+            }
+        }
     }
+    
+    let shp: SHPReader
+    let dbf: DBFReader?
+    let shx: SHXReader?
+    
+    /// - Parameter url: Shapefile directory, archive or .shp file.
+    init(url: URL) throws {
+        
+        let shpExtension = "shp"
+        let dbfExtension = "dbf"
+        let shxExtension = "shx"
+
+        let shpURL: URL
+        if url.isFileURL, url.pathExtension == shpExtension {
+            shpURL = url
+        }
+        else {
+            let directoryURL: URL
+            if url.hasDirectoryPath {
+                directoryURL = url
+            }
+            else {
+                let shapeName = url.deletingPathExtension().lastPathComponent
+                let tempDirectoryURL = FileManager.default.temporaryDirectory.appendingPathComponent(shapeName, isDirectory: true)
+                try? FileManager.default.removeItem(at: tempDirectoryURL)
+                try FileManager.default.unzipItem(at: url, to: tempDirectoryURL)
+                directoryURL = tempDirectoryURL
+            }
+            
+            if let firstURL = (try FileManager.default.contentsOfDirectory(at: directoryURL, includingPropertiesForKeys: [.isRegularFileKey, .nameKey]).first { $0.isFileURL && $0.pathExtension == shpExtension }) {
+                shpURL = firstURL
+            }
+            else {
+                throw ShapefileReaderError.shpNotFound(at: url)
+            }
+        }
+        
+        shp = try SHPReader(url: shpURL)
+        dbf = try? DBFReader(url: shpURL.deletingPathExtension().appendingPathExtension(dbfExtension))
+        shx = try? SHXReader(url: shpURL.deletingPathExtension().appendingPathExtension(shxExtension))
+    }
+    
     
     subscript(i:Int) -> Shape? {
         guard let shx = self.shx else {
@@ -588,7 +629,8 @@ class ShapefileReader {
         }
 
         return nil
-}
+    }
+    
     
     func shapeAndRecordGenerator() -> AnyIterator<(Shape, DBFReader.DBFRecord)> {
         
