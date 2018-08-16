@@ -6,7 +6,7 @@ target 'Shapefile' do
   pod 'ZIPFoundation', '~> 0.9'
 
   target 'ShapefileTests' do
-    inherit! :search_paths
+    inherit! :complete
     # Pods for testing
   end
 

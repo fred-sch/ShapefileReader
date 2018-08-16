@@ -13,6 +13,7 @@ Internally, it builds the three following objects, depending on the available au
 - `SHPReader` to read the shapes, ie the list of points
 - `DBFReader` to read the data records associated with the shapes
 - `SHXReader` to read the indices of the shapes, thus allowing direct access
+- `PRJReader` to read the coordinate system and projection information
 
 Most usages of `ShapefileReader` will remain like:
 
@@ -91,8 +92,4 @@ You just need to change the path at the beginning of the `draw()` function in `m
 <a href="img/switzerland_altitude.png"><img src="img/switzerland_altitude.png" width="890" alt="Switzerland Altitude" /></a>
 
 <a href="img/switzerland_zip.png"><img src="img/switzerland_zip.png" width="890" alt="Switzerland ZIP Codes" /></a>
-
-__TODO__
-
-Handle projection files, eg. from http://www.gadm.org/download.
 

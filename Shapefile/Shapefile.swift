@@ -78,6 +78,8 @@ enum ShapeType : Int {
     }
 }
 
+
+
 class Shape {
     init(type:ShapeType = .nullShape) {
         self.shapeType = type
@@ -111,6 +113,8 @@ class Shape {
         }
     }
 }
+
+
 
 class DBFReader {
     // dBase III+ specs http://www.oocities.org/geoff_wass/dBASE/GaryWhite/dBASE/FAQ/qformt.htm#A
@@ -313,6 +317,8 @@ class DBFReader {
     }
 }
 
+
+
 class SHPReader {
     
     var fileHandle : FileHandle!
@@ -488,6 +494,8 @@ class SHPReader {
     }
 }
 
+
+
 class SHXReader {
     /*
     The shapefile index contains the same 100-byte header as the .shp file, followed by any number of 8-byte fixed-length records which consist of the following two fields:
@@ -560,6 +568,18 @@ class SHXReader {
 
 
 
+class PRJReader {
+    
+    let cs: Varied<CoordinateSystem>
+    
+    init(url: URL) throws {
+        let data = try Data(contentsOf: url)
+        cs = try WKTDecoder().decode(Varied<CoordinateSystem>.self, from: data)
+    }
+}
+
+
+
 class ShapefileReader {
     
     enum ShapefileReaderError: Error {
@@ -575,13 +595,15 @@ class ShapefileReader {
     let shp: SHPReader
     let dbf: DBFReader?
     let shx: SHXReader?
-    
+    let prj: PRJReader?
+
     /// - Parameter url: Shapefile directory, archive or .shp file.
     init(url: URL) throws {
         
         let shpExtension = "shp"
         let dbfExtension = "dbf"
         let shxExtension = "shx"
+        let prjExtension = "prj"
 
         let shpURL: URL
         if url.isFileURL, url.pathExtension == shpExtension {
@@ -611,6 +633,7 @@ class ShapefileReader {
         shp = try SHPReader(url: shpURL)
         dbf = try? DBFReader(url: shpURL.deletingPathExtension().appendingPathExtension(dbfExtension))
         shx = try? SHXReader(url: shpURL.deletingPathExtension().appendingPathExtension(shxExtension))
+        prj = try? PRJReader(url: shpURL.deletingPathExtension().appendingPathExtension(prjExtension))
     }
     
     

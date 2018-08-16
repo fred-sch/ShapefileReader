@@ -8,6 +8,7 @@
 
 import XCTest
 
+
 class ShapefileTests: XCTestCase {
     
     override func setUp() {
@@ -20,12 +21,13 @@ class ShapefileTests: XCTestCase {
         super.tearDown()
     }
     
+    
     // http://www.arcgis.com/home/item.html?id=a5067fb3b0b74b188d7b650fa5c64b39
     
     func testRecords() {
-        let path = Bundle(for: ShapefileTests.self).path(forResource:"Kantone", ofType: "shp")!
+        let url = Bundle(for: ShapefileTests.self).url(forResource: "Kantone", withExtension: "shp")!
         
-        let sr = try! ShapefileReader(path:path)
+        let sr = try! ShapefileReader(url: url)
 
         XCTAssertEqual(sr.dbf!.numberOfRecords, 26)
 
@@ -38,12 +40,13 @@ class ShapefileTests: XCTestCase {
         print("\(#function) pass")
     }
 
+    
     func testShapes() {
-        let path = Bundle(for: ShapefileTests.self).path(forResource:"Kantone", ofType: "shp")!
+        let url = Bundle(for: ShapefileTests.self).url(forResource: "Kantone", withExtension: "shp")!
         
-        let sr = try! ShapefileReader(path:path)
+        let sr = try! ShapefileReader(url: url)
 
-        let shapes = sr.shp!.allShapes()
+        let shapes = sr.shp.allShapes()
         XCTAssertEqual(shapes.count, 26)
         
         let shape2 = shapes[2]
@@ -55,15 +58,16 @@ class ShapefileTests: XCTestCase {
         XCTAssertEqual(sr.shp.allShapes().count, try! sr.dbf!.allRecords().count)
     }
 
+    
     func testShx() {
-        let path = Bundle(for: ShapefileTests.self).path(forResource:"Kantone", ofType: "shp")!
+        let url = Bundle(for: ShapefileTests.self).url(forResource: "Kantone", withExtension: "shp")!
         
-        let sr = try! ShapefileReader(path:path)
+        let sr = try! ShapefileReader(url: url)
 
         let offset = sr.shx!.shapeOffsetAtIndex(2)!
-        let (_, shape2_) = try! sr.shp!.shapeAtOffset(UInt64(offset))!
+        let (_, shape2_) = try! sr.shp.shapeAtOffset(UInt64(offset))!
         
-        let shape2__ = sr.shp!.allShapes()[2]
+        let shape2__ = sr.shp.allShapes()[2]
         let shape2___ = sr[2]!
 
         XCTAssertEqual(shape2_.parts.count, shape2__.parts.count)
@@ -74,4 +78,36 @@ class ShapefileTests: XCTestCase {
         XCTAssertEqual(sr.dbf!.numberOfRecords, sr.shx!.numberOfShapes)
     }
     
+    
+    func testPrj() {
+        let url = Bundle(for: ShapefileTests.self).url(forResource: "Kantone", withExtension: "shp")!
+        
+        let sr = try! ShapefileReader(url: url)
+        let cs = sr.prj?.cs.entity as? ProjectedCS
+        XCTAssertEqual(cs?.geographicCS.angularUnit.name, "Degree")
+        XCTAssertEqual(cs?.geographicCS.angularUnit.conversionFactor, 0.0174532925199433)
+        XCTAssertEqual(cs?.parameters?.first { $0.name == "Longitude_Of_Center" }?.value, 7.439583333333333)
+        XCTAssertEqual(cs?.parameters?.first { $0.name == "Latitude_Of_Center" }?.value, 46.95240555555556)
+    }
+    
+    
+    func testWKTParser() {
+        let wktData = try! Data(contentsOf: Bundle(for: type(of: self)).url(forResource: "Example", withExtension: "wkt")!)
+        
+        let wktObjects = try! WKTSerialization.wktObjects(with: wktData)
+        let filter = { !"\n 1234567890.\"".contains($0) }
+        let wkt1 = String(data: wktData, encoding: .utf8)!.filter(filter)
+        let wkt2 = wktObjects.first!.description.filter(filter)
+        XCTAssertEqual(wkt1, wkt2)
+//        print("\n-1-", wkt1, "\n-2-", wkt2, "\n")
+    }
+    
+    
+    func testWKTDecoder() {
+        let wktData = try! Data(contentsOf: Bundle(for: type(of: self)).url(forResource: "Example", withExtension: "wkt")!)
+        
+        let cs = try! WKTDecoder().decode(Varied<CoordinateSystem>.self, from: wktData)
+        XCTAssert(cs.entity is CompdCS)
+        XCTAssertEqual(((cs.entity as? CompdCS)?.headCS.entity as? ProjectedCS)?.parameters?.count, 5)
+    }
 }

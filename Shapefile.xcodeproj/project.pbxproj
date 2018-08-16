@@ -27,11 +27,14 @@
 		03B7088A1CA5F08700F3B3A0 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B708891CA5F08700F3B3A0 /* CanvasView.swift */; };
 		03B7088C1CA5F6D200F3B3A0 /* ShapefileBitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B7088B1CA5F6D200F3B3A0 /* ShapefileBitmap.swift */; };
 		03B708931CA73C2400F3B3A0 /* ShapefileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B708921CA73C2400F3B3A0 /* ShapefileView.swift */; };
-		9617339999F4561ABBBDC759 /* libPods-ShapefileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 682F07F4101A9CA7376D9BD1 /* libPods-ShapefileTests.a */; };
+		D46A245CB53C91908376598A /* libPods-Shapefile-ShapefileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B946038A7612A653CFB0DBDC /* libPods-Shapefile-ShapefileTests.a */; };
 		EC3ABFDA2112365A00C3FAAF /* g1k15.zip in CopyFiles */ = {isa = PBXBuildFile; fileRef = EC3ABFD8211235D000C3FAAF /* g1k15.zip */; };
 		EC3ABFDB2112365A00C3FAAF /* g2g15.zip in CopyFiles */ = {isa = PBXBuildFile; fileRef = EC3ABFD9211235D000C3FAAF /* g2g15.zip */; };
+		EC522423211C6B50009F0491 /* Example.wkt in Resources */ = {isa = PBXBuildFile; fileRef = EC522422211C6B50009F0491 /* Example.wkt */; };
 		EC6FD9B42110ED2200DACC6F /* rgb.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = EC6FD9B32110E37600DACC6F /* rgb.txt */; };
 		EC6FD9B72110F2CB00DACC6F /* plz_p1.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03B708881CA5B1A000F3B3A0 /* plz_p1.txt */; };
+		ECF285292119CBB2001D376A /* CoordinateSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF285282119CBB2001D376A /* CoordinateSystem.swift */; };
+		ECF2852A2119CBB2001D376A /* CoordinateSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF285282119CBB2001D376A /* CoordinateSystem.swift */; };
 		F6C331EEC8A79FA344A0F97A /* libPods-Shapefile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F61E21938E4107104871FA35 /* libPods-Shapefile.a */; };
 /* End PBXBuildFile section */
 
@@ -76,12 +79,17 @@
 		03B7088B1CA5F6D200F3B3A0 /* ShapefileBitmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapefileBitmap.swift; sourceTree = "<group>"; };
 		03B708921CA73C2400F3B3A0 /* ShapefileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapefileView.swift; sourceTree = "<group>"; };
 		59135EBFFFF7CDC01ED52427 /* Pods-Shapefile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shapefile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Shapefile/Pods-Shapefile.debug.xcconfig"; sourceTree = "<group>"; };
-		682F07F4101A9CA7376D9BD1 /* libPods-ShapefileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ShapefileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		84ED86F1EF07A38377707887 /* Pods-Shapefile-ShapefileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shapefile-ShapefileTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Shapefile-ShapefileTests/Pods-Shapefile-ShapefileTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A2E829BF9160CCF72A56CF54 /* Pods-Shapefile-ShapefileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shapefile-ShapefileTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shapefile-ShapefileTests/Pods-Shapefile-ShapefileTests.release.xcconfig"; sourceTree = "<group>"; };
+		B946038A7612A653CFB0DBDC /* libPods-Shapefile-ShapefileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shapefile-ShapefileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAC7B31C47E5A25E0143591C /* Pods-ShapefileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShapefileTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ShapefileTests/Pods-ShapefileTests.release.xcconfig"; sourceTree = "<group>"; };
 		E62CEB48845E85E3644FA322 /* Pods-Shapefile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shapefile.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shapefile/Pods-Shapefile.release.xcconfig"; sourceTree = "<group>"; };
 		EC3ABFD8211235D000C3FAAF /* g1k15.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = g1k15.zip; sourceTree = "<group>"; };
 		EC3ABFD9211235D000C3FAAF /* g2g15.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = g2g15.zip; sourceTree = "<group>"; };
+		EC42D32B2125BEDC003CACFC /* 01-009_OpenGIS_Implementation_Specification_Coordinate_Transformation_Services_Revision_1.00.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "01-009_OpenGIS_Implementation_Specification_Coordinate_Transformation_Services_Revision_1.00.pdf"; sourceTree = "<group>"; };
+		EC522422211C6B50009F0491 /* Example.wkt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Example.wkt; sourceTree = "<group>"; };
 		EC6FD9B32110E37600DACC6F /* rgb.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rgb.txt; sourceTree = "<group>"; };
+		ECF285282119CBB2001D376A /* CoordinateSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateSystem.swift; sourceTree = "<group>"; };
 		EE3CA3F71F64C136213187FD /* Pods-ShapefileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShapefileTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ShapefileTests/Pods-ShapefileTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F61E21938E4107104871FA35 /* libPods-Shapefile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shapefile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -99,7 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9617339999F4561ABBBDC759 /* libPods-ShapefileTests.a in Frameworks */,
+				D46A245CB53C91908376598A /* libPods-Shapefile-ShapefileTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +120,7 @@
 				0344B4DF1C9EFB02001DCDAB /* BinUtils.swift */,
 				0344B4E01C9EFB02001DCDAB /* BitmapCanvas.swift */,
 				0344B4E11C9EFB02001DCDAB /* X11Colors.swift */,
+				ECF285282119CBB2001D376A /* CoordinateSystem.swift */,
 			);
 			path = vendor;
 			sourceTree = "<group>";
@@ -125,6 +134,7 @@
 				03B708871CA5AEE700F3B3A0 /* data_sources.txt */,
 				03B708881CA5B1A000F3B3A0 /* plz_p1.txt */,
 				032E45ED1CA3E12A006C4622 /* Conditions_d'exploitation-Copyright_OFS_GEOSTAT.pdf */,
+				EC42D32B2125BEDC003CACFC /* 01-009_OpenGIS_Implementation_Specification_Coordinate_Transformation_Services_Revision_1.00.pdf */,
 			);
 			path = data;
 			sourceTree = "<group>";
@@ -167,6 +177,7 @@
 			children = (
 				035D100C1C9E1FFA00BC89C8 /* Kantone */,
 				035D10061C9E1FB200BC89C8 /* ShapefileTests.swift */,
+				EC522422211C6B50009F0491 /* Example.wkt */,
 				035D10081C9E1FB200BC89C8 /* Info.plist */,
 			);
 			path = ShapefileTests;
@@ -204,6 +215,8 @@
 				E62CEB48845E85E3644FA322 /* Pods-Shapefile.release.xcconfig */,
 				EE3CA3F71F64C136213187FD /* Pods-ShapefileTests.debug.xcconfig */,
 				CAC7B31C47E5A25E0143591C /* Pods-ShapefileTests.release.xcconfig */,
+				84ED86F1EF07A38377707887 /* Pods-Shapefile-ShapefileTests.debug.xcconfig */,
+				A2E829BF9160CCF72A56CF54 /* Pods-Shapefile-ShapefileTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -212,7 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				F61E21938E4107104871FA35 /* libPods-Shapefile.a */,
-				682F07F4101A9CA7376D9BD1 /* libPods-ShapefileTests.a */,
+				B946038A7612A653CFB0DBDC /* libPods-Shapefile-ShapefileTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -300,6 +313,7 @@
 			files = (
 				035D10161C9E1FFA00BC89C8 /* Kantone.sbn in Resources */,
 				035D10141C9E1FFA00BC89C8 /* Kantone.dbf in Resources */,
+				EC522423211C6B50009F0491 /* Example.wkt in Resources */,
 				035D10171C9E1FFA00BC89C8 /* Kantone.sbx in Resources */,
 				035D10151C9E1FFA00BC89C8 /* Kantone.prj in Resources */,
 				035D10181C9E1FFA00BC89C8 /* Kantone.shp in Resources */,
@@ -322,7 +336,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ShapefileTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Shapefile-ShapefileTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -358,6 +372,7 @@
 				0344B4E21C9EFB02001DCDAB /* BinUtils.swift in Sources */,
 				03B708931CA73C2400F3B3A0 /* ShapefileView.swift in Sources */,
 				0344B4E61C9EFB02001DCDAB /* X11Colors.swift in Sources */,
+				ECF285292119CBB2001D376A /* CoordinateSystem.swift in Sources */,
 				0344B4E41C9EFB02001DCDAB /* BitmapCanvas.swift in Sources */,
 				03B7088A1CA5F08700F3B3A0 /* CanvasView.swift in Sources */,
 				03B7088C1CA5F6D200F3B3A0 /* ShapefileBitmap.swift in Sources */,
@@ -373,6 +388,7 @@
 				0344B4E31C9EFB02001DCDAB /* BinUtils.swift in Sources */,
 				0344B4E71C9EFB02001DCDAB /* X11Colors.swift in Sources */,
 				0344B4E51C9EFB02001DCDAB /* BitmapCanvas.swift in Sources */,
+				ECF2852A2119CBB2001D376A /* CoordinateSystem.swift in Sources */,
 				035D101B1C9E208F00BC89C8 /* Shapefile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -503,27 +519,27 @@
 		};
 		035D100A1C9E1FB200BC89C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE3CA3F71F64C136213187FD /* Pods-ShapefileTests.debug.xcconfig */;
+			baseConfigurationReference = 84ED86F1EF07A38377707887 /* Pods-Shapefile-ShapefileTests.debug.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ShapefileTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ch.seriot.ShapefileTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
 		035D100B1C9E1FB200BC89C8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CAC7B31C47E5A25E0143591C /* Pods-ShapefileTests.release.xcconfig */;
+			baseConfigurationReference = A2E829BF9160CCF72A56CF54 /* Pods-Shapefile-ShapefileTests.release.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ShapefileTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ch.seriot.ShapefileTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
