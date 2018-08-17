@@ -27,9 +27,7 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 
-typealias MapPoint = CGPoint
-
-enum ShapeType : Int {
+public enum ShapeType : Int {
     case nullShape = 0
     case point = 1
     case polyLine = 3
@@ -80,20 +78,21 @@ enum ShapeType : Int {
 
 
 
-class Shape {
-    init(type:ShapeType = .nullShape) {
-        self.shapeType = type
+public class Shape {
+    
+    init(type: ShapeType = .nullShape) {
+        shapeType = type
     }
     
-    var shapeType : ShapeType
-    var points : [MapPoint] = []
+    public internal(set) var shapeType: ShapeType
+    public internal(set) var points: [CGPoint] = []
     var bbox : (x_min:Double, y_min:Double, x_max:Double, y_max:Double) = (0.0,0.0,0.0,0.0)
     var parts : [Int] = []
     var partTypes : [Int] = []
     var z : Double = 0.0
     var m : [Double?] = []
     
-    func partPointsGenerator() -> AnyIterator<[MapPoint]> {
+    func partPointsGenerator() -> AnyIterator<[CGPoint]> {
         
         var indices = Array(self.parts)
         indices.append(self.points.count-1)
@@ -116,7 +115,7 @@ class Shape {
 
 
 
-class DBFReader {
+public class DBFReader {
     // dBase III+ specs http://www.oocities.org/geoff_wass/dBASE/GaryWhite/dBASE/FAQ/qformt.htm#A
     // extended with dBase IV 2.0 'F' type
 
@@ -319,7 +318,7 @@ class DBFReader {
 
 
 
-class SHPReader {
+public class SHPReader {
     
     var fileHandle : FileHandle!
     var shapeType : ShapeType = .nullShape
@@ -416,7 +415,7 @@ class SHPReader {
             record.partTypes = try unpack("<\(nParts)i", f.readData(ofLength: nParts * 4)).map({ $0 as! Int })
         }
         
-        var recPoints : [MapPoint] = []
+        var recPoints : [CGPoint] = []
         for _ in 0..<nPoints {
             let points = try unpack("<2d", f.readData(ofLength: 16)).map({ $0 as! Double })
             recPoints.append(CGPoint(x: CGFloat(points[0]),y: CGFloat(points[1])))
@@ -480,7 +479,7 @@ class SHPReader {
         }
     }
     
-    func allShapes() -> [Shape] {
+    public func allShapes() -> [Shape] {
         
         var shapes : [Shape] = []
         
@@ -496,7 +495,7 @@ class SHPReader {
 
 
 
-class SHXReader {
+public class SHXReader {
     /*
     The shapefile index contains the same 100-byte header as the .shp file, followed by any number of 8-byte fixed-length records which consist of the following two fields:
     Bytes   Type    Endianness  Usage
@@ -568,7 +567,7 @@ class SHXReader {
 
 
 
-class PRJReader {
+public class PRJReader {
     
     let cs: Varied<CoordinateSystem>
     
@@ -580,25 +579,25 @@ class PRJReader {
 
 
 
-class ShapefileReader {
+public class ShapefileReader {
     
     enum ShapefileReaderError: Error {
         case shpNotFound(at: URL)
         
         var localizedDescription: String {
             switch self {
-            case .shpNotFound(let url): return "Shapefile Not Found at \(url)"
+            case .shpNotFound(let url): return "Shapefile not found at \(url)"
             }
         }
     }
     
-    let shp: SHPReader
-    let dbf: DBFReader?
-    let shx: SHXReader?
-    let prj: PRJReader?
+    public let shp: SHPReader
+    public let dbf: DBFReader?
+    public let shx: SHXReader?
+    public let prj: PRJReader?
 
     /// - Parameter url: Shapefile directory, archive or .shp file.
-    init(url: URL) throws {
+    public init(url: URL) throws {
         
         let shpExtension = "shp"
         let dbfExtension = "dbf"
