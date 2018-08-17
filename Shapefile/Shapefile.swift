@@ -621,7 +621,12 @@ public class ShapefileReader {
                 directoryURL = tempDirectoryURL
             }
             
-            if let firstURL = (try FileManager.default.contentsOfDirectory(at: directoryURL, includingPropertiesForKeys: [.isRegularFileKey, .nameKey]).first { $0.isFileURL && $0.pathExtension == shpExtension }) {
+            if let firstURL = (FileManager.default.enumerator(at: directoryURL, includingPropertiesForKeys: [.isRegularFileKey, .nameKey])?.lazy.first {
+                if let url = $0 as? URL {
+                    return url.isFileURL && url.pathExtension == shpExtension
+                } else {
+                    return false
+                } }) as? URL {
                 shpURL = firstURL
             }
             else {
