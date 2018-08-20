@@ -46,7 +46,7 @@ class ShapefileTests: XCTestCase {
         
         let sr = try! ShapefileReader(url: url)
 
-        let shapes = sr.shp.allShapes()
+        let shapes = Array(sr.shp)
         XCTAssertEqual(shapes.count, 26)
         
         let shape2 = shapes[2]
@@ -55,7 +55,7 @@ class ShapefileTests: XCTestCase {
         XCTAssertEqual(shape2.points.count, 531)
         XCTAssert(shape2.bbox.x_max > 0)
         
-        XCTAssertEqual(sr.shp.allShapes().count, try! sr.dbf!.allRecords().count)
+        XCTAssertEqual(shapes.count, try! sr.dbf!.allRecords().count)
     }
 
     
@@ -67,8 +67,8 @@ class ShapefileTests: XCTestCase {
         let offset = sr.shx!.shapeOffsetAtIndex(2)!
         let (_, shape2_) = try! sr.shp.shapeAtOffset(UInt64(offset))!
         
-        let shape2__ = sr.shp.allShapes()[2]
-        let shape2___ = sr[2]!
+        let shape2__ = Array(sr.shp)[2]
+        let shape2___ = sr[2]
 
         XCTAssertEqual(shape2_.parts.count, shape2__.parts.count)
         XCTAssertEqual(shape2_.points.count, shape2__.points.count)

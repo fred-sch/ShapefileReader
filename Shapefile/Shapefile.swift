@@ -13,6 +13,7 @@
 import Foundation
 import CoreGraphics
 import ZIPFoundation
+import CoreLocation
 
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -465,8 +466,12 @@ public class SHPReader {
         
         return (next, record)
     }
+}
+
+
+extension SHPReader: Sequence {
     
-    func shapeGenerator() -> AnyIterator<Shape> {
+    public func makeIterator() -> AnyIterator<Shape> {
         
         var nextIndex : UInt64 = 100
         
@@ -478,21 +483,7 @@ public class SHPReader {
             return nil
         }
     }
-    
-    public func allShapes() -> [Shape] {
-        
-        var shapes : [Shape] = []
-        
-        let generator = self.shapeGenerator()
-        
-        while let s = generator.next() {
-            shapes.append(s)
-        }
-        
-        return shapes
-    }
 }
-
 
 
 public class SHXReader {
@@ -569,7 +560,7 @@ public class SHXReader {
 
 public class PRJReader {
     
-    let cs: Varied<CoordinateSystem>
+    public let cs: Varied<CoordinateSystem>
     
     init(url: URL) throws {
         let data = try Data(contentsOf: url)
@@ -581,12 +572,18 @@ public class PRJReader {
 
 public class ShapefileReader {
     
-    enum ShapefileReaderError: Error {
-        case shpNotFound(at: URL)
+    public enum Error: Swift.Error {
+        case shpFileNotFound(at: URL)
+        case shapeNotFound(at: Int)
+        case coordinateSystemNotDefined
+        case coordinateSystemNotSupported(CoordinateSystem)
         
         var localizedDescription: String {
             switch self {
-            case .shpNotFound(let url): return "Shapefile not found at \(url)"
+            case .shpFileNotFound(let url): return "Shapefile not found at \(url)"
+            case .shapeNotFound(let index): return "Shape not found at index \(index)"
+            case .coordinateSystemNotDefined: return "Coordinate system not defined"
+            case .coordinateSystemNotSupported(let cs): return "Coordinate system \"\(cs.name)\" not supported"
             }
         }
     }
@@ -630,7 +627,7 @@ public class ShapefileReader {
                 shpURL = firstURL
             }
             else {
-                throw ShapefileReaderError.shpNotFound(at: url)
+                throw Error.shpFileNotFound(at: url)
             }
         }
         
@@ -641,34 +638,61 @@ public class ShapefileReader {
     }
     
     
-    subscript(i:Int) -> Shape? {
-        guard let shx = self.shx else {
-            return nil
-        }
-        
-        guard let offset = shx.shapeOffsetAtIndex(i) else { return nil }
-        
-        do {
-            if let (_, shape) = try self.shp.shapeAtOffset(UInt64(offset)) {
-                return shape
-            }
-        } catch {
-        }
-
-        return nil
-    }
-    
-    
     func shapeAndRecordGenerator() -> AnyIterator<(Shape, DBFReader.DBFRecord)> {
         
         var i = 0
         
         return AnyIterator {
-            guard let s = self[i] else { return nil }
-            guard let r = self.dbf?[i] else { return nil }
-            i += 1
-            return (s, r)
+            guard i < self.count, let r = self.dbf?[i] else { return nil }
+            defer { i += 1 }
+            return (self[i], r)
         }
     }
     
+    /// Can be overridden to support coordinate systems other than WGS84.
+    open func pointsCoordinatesForShape(at index: Int) throws -> [CLLocationCoordinate2D] {
+    
+        guard index < count else { throw Error.shapeNotFound(at: index) }
+        
+        guard let cs = prj?.cs.entity else { throw Error.coordinateSystemNotDefined }
+        
+        guard cs is GeographicCS, cs.name.range(of: "wgs.*84", options: [.regularExpression, .caseInsensitive]) != nil else { throw Error.coordinateSystemNotSupported(cs) }
+        
+        return self[index].points.map { CLLocationCoordinate2D(latitude: CLLocationDegrees($0.y), longitude: CLLocationDegrees($0.x)) }
+    }
+}
+
+
+extension ShapefileReader: Sequence {
+    
+    public func makeIterator() -> AnyIterator<Shape> {
+        return shp.makeIterator()
+    }
+}
+
+
+extension ShapefileReader: Collection {
+    
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+    
+    public subscript(position: Int) -> Shape {
+        // Tolerates the absence of indices file, as well as offset errors.
+        if let offset = shx?.shapeOffsetAtIndex(position), let shape = (try? shp.shapeAtOffset(UInt64(offset))?.shape) as? Shape {
+            return shape
+        }
+        else {
+            assert(ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil, "No tolerance to the indices file in tests")
+            return shp.dropFirst(position).makeIterator().next()!
+        }
+    }
+    
+    public var startIndex: Int {
+        return 0
+    }
+    
+    public var endIndex: Int {
+        return shx?.numberOfShapes ?? shp.reduce(0) { count, _ in count + 1 }
+    }
 }

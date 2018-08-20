@@ -11,13 +11,13 @@
 import Foundation
 
 
-protocol WKTEntity: Decodable {
+public protocol WKTEntity: Decodable {
     
     static var keyword: String { get }
 }
 
 
-struct Varied<T>: Decodable {
+public struct Varied<T>: Decodable {
     
     private static var supportedTypes: [WKTEntity.Type] {
         switch T.self {
@@ -34,9 +34,9 @@ struct Varied<T>: Decodable {
         return supportedTypes.first { $0.keyword == keyword }
     }
 
-    let entity: T?
+    public let entity: T?
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let keyword = try container.decode(String.self)
         let type = Varied<T>.type(for: keyword)
@@ -46,13 +46,13 @@ struct Varied<T>: Decodable {
 }
 
 
-protocol CoordinateSystem: WKTEntity {
+public protocol CoordinateSystem: WKTEntity {
     
     var name: String { get }
 }
 
 
-protocol MathTransform: WKTEntity { }
+public protocol MathTransform: WKTEntity { }
 
 
 struct TwinAxes: Decodable {
