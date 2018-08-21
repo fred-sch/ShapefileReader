@@ -3,13 +3,26 @@
 //  ShapefileTests
 //
 //  Created by nst on 20/03/16.
-//  Copyright © 2016 Nicolas Seriot. All rights reserved.
+//  Copyright © 2016-2018 Nicolas Seriot, Alexey Demin. All rights reserved.
 //
 
 import XCTest
 
 
 class ShapefileTests: XCTestCase {
+    
+    static let bundle = Bundle(for: ShapefileTests.self)
+    
+    let dbfURL = bundle.url(forResource: "Kantone", withExtension: "dbf")!
+    let prjURL = bundle.url(forResource: "Kantone", withExtension: "prj")!
+    let sbnURL = bundle.url(forResource: "Kantone", withExtension: "sbn")!
+    let sbxURL = bundle.url(forResource: "Kantone", withExtension: "sbx")!
+    let shpURL = bundle.url(forResource: "Kantone", withExtension: "shp")!
+    let xmlURL = bundle.url(forResource: "Kantone", withExtension: "shp.xml")!
+    let shxURL = bundle.url(forResource: "Kantone", withExtension: "shx")!
+    
+    let wktURL = bundle.url(forResource: "Example", withExtension: "wkt")!
+
     
     override func setUp() {
         super.setUp()
@@ -25,9 +38,8 @@ class ShapefileTests: XCTestCase {
     // http://www.arcgis.com/home/item.html?id=a5067fb3b0b74b188d7b650fa5c64b39
     
     func testRecords() {
-        let url = Bundle(for: ShapefileTests.self).url(forResource: "Kantone", withExtension: "shp")!
         
-        let sr = try! ShapefileReader(url: url)
+        let sr = try! ShapefileReader(url: shpURL)
 
         XCTAssertEqual(sr.dbf!.numberOfRecords, 26)
 
@@ -42,9 +54,8 @@ class ShapefileTests: XCTestCase {
 
     
     func testShapes() {
-        let url = Bundle(for: ShapefileTests.self).url(forResource: "Kantone", withExtension: "shp")!
         
-        let sr = try! ShapefileReader(url: url)
+        let sr = try! ShapefileReader(url: shpURL)
 
         let shapes = Array(sr.shp)
         XCTAssertEqual(shapes.count, 26)
@@ -60,9 +71,8 @@ class ShapefileTests: XCTestCase {
 
     
     func testShx() {
-        let url = Bundle(for: ShapefileTests.self).url(forResource: "Kantone", withExtension: "shp")!
         
-        let sr = try! ShapefileReader(url: url)
+        let sr = try! ShapefileReader(url: shpURL)
 
         let offset = sr.shx!.shapeOffsetAtIndex(2)!
         let (_, shape2_) = try! sr.shp.shapeAtOffset(UInt64(offset))!
@@ -80,9 +90,8 @@ class ShapefileTests: XCTestCase {
     
     
     func testPrj() {
-        let url = Bundle(for: ShapefileTests.self).url(forResource: "Kantone", withExtension: "shp")!
         
-        let sr = try! ShapefileReader(url: url)
+        let sr = try! ShapefileReader(url: shpURL)
         let cs = sr.prj?.cs.entity as? ProjectedCS
         XCTAssertEqual(cs?.geographicCS.angularUnit.name, "Degree")
         XCTAssertEqual(cs?.geographicCS.angularUnit.conversionFactor, 0.0174532925199433)
@@ -92,7 +101,8 @@ class ShapefileTests: XCTestCase {
     
     
     func testWKTParser() {
-        let wktData = try! Data(contentsOf: Bundle(for: type(of: self)).url(forResource: "Example", withExtension: "wkt")!)
+        
+        let wktData = try! Data(contentsOf: wktURL)
         
         let wktObjects = try! WKTSerialization.wktObjects(with: wktData)
         let filter = { !"\n 1234567890.\"".contains($0) }
@@ -104,10 +114,70 @@ class ShapefileTests: XCTestCase {
     
     
     func testWKTDecoder() {
-        let wktData = try! Data(contentsOf: Bundle(for: type(of: self)).url(forResource: "Example", withExtension: "wkt")!)
+        
+        let wktData = try! Data(contentsOf: wktURL)
         
         let cs = try! WKTDecoder().decode(Varied<CoordinateSystem>.self, from: wktData)
         XCTAssert(cs.entity is CompdCS)
         XCTAssertEqual(((cs.entity as? CompdCS)?.headCS.entity as? ProjectedCS)?.parameters?.count, 5)
+    }
+    
+    
+    func testWrongFormats() {
+        
+        XCTAssertThrowsError(try ShapefileReader(url: dbfURL))
+        XCTAssertThrowsError(try ShapefileReader(url: prjURL))
+        XCTAssertThrowsError(try ShapefileReader(url: sbnURL))
+        XCTAssertThrowsError(try ShapefileReader(url: sbxURL))
+        XCTAssertThrowsError(try ShapefileReader(url: xmlURL))
+        XCTAssertThrowsError(try ShapefileReader(url: shxURL))
+        XCTAssertThrowsError(try ShapefileReader(url: wktURL))
+
+        XCTAssertThrowsError(try SHPReader(url: dbfURL))
+        XCTAssertThrowsError(try SHPReader(url: prjURL))
+        XCTAssertThrowsError(try SHPReader(url: sbnURL))
+        XCTAssertThrowsError(try SHPReader(url: sbxURL))
+        XCTAssertThrowsError(try SHPReader(url: xmlURL))
+//        XCTAssertThrowsError(try SHPReader(url: shxURL))
+        XCTAssertThrowsError(try SHPReader(url: wktURL))
+
+        let shp = try! SHPReader(url: shxURL)
+        XCTAssertTrue(Array(shp).isEmpty)
+    }
+    
+    
+    func testCrashes() {
+        
+        // SHP data corruption
+        let data = try! Data(contentsOf: shpURL)
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("test").appendingPathExtension("shp")
+        let piece = 1000
+        
+        // Bitwise cutting
+        for i in 0..<piece {
+            let d = data[..<(piece - i)]
+            try! d.write(to: url, options: .atomic)
+            if let sr = try? SHPReader(url: url) {
+                _ = Array(sr)
+            }
+        }
+        // Bitwise zeroing
+        for i in 0..<piece {
+            var d = data[..<piece]
+            d[i] = 0
+            try! d.write(to: url, options: .atomic)
+            if let sr = try? SHPReader(url: url) {
+                _ = Array(sr)
+            }
+        }
+        // Bitwise NOT
+        for i in 0..<piece {
+            var d = data[..<piece]
+            d[i] = ~d[i]
+            try! d.write(to: url, options: .atomic)
+            if let sr = try? SHPReader(url: url) {
+                _ = Array(sr)
+            }
+        }
     }
 }

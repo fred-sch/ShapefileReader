@@ -120,10 +120,6 @@ public class DBFReader {
     // dBase III+ specs http://www.oocities.org/geoff_wass/dBASE/GaryWhite/dBASE/FAQ/qformt.htm#A
     // extended with dBase IV 2.0 'F' type
 
-    enum Errors: Error {
-        case cannotReadFile(path:String)
-    }
-    
     typealias DBFRecord = [Any]
     
     var fileHandle : FileHandle!
@@ -321,6 +317,20 @@ public class DBFReader {
 
 public class SHPReader {
     
+    public enum Error: Swift.Error {
+        case wrongFileCode(Int)
+        case invalidShapeType(Int)
+        case offsetOutOfLength(UInt64, UInt64)
+
+        var localizedDescription: String {
+            switch self {
+            case .wrongFileCode(let code): return "File code \(code) is wrong"
+            case .invalidShapeType(let type): return "Shape type \(type) is not valid"
+            case .offsetOutOfLength(let offset, let length): return "Shape offset \(offset) is greater than file length \(length)"
+            }
+        }
+    }
+
     var fileHandle : FileHandle!
     var shapeType : ShapeType = .nullShape
     var bbox : (x_min:Double, y_min:Double, x_max:Double, y_max:Double) = (0.0,0.0,0.0,0.0) // Xmin, Ymin, Xmax, Ymax
@@ -334,25 +344,26 @@ public class SHPReader {
     }
     
     deinit {
-        self.fileHandle.closeFile()
+        self.fileHandle?.closeFile()
     }
     
     fileprivate func readHeader() throws {
         
         let f : FileHandle = self.fileHandle
         
+        let code = try unpack(">i", f.readData(ofLength: 4))[0] as! Int
+        guard code == 0x0000270a else { throw Error.wrongFileCode(code) }
+        
         f.seek(toFileOffset: 24)
         
         let l = try unpack(">i", f.readData(ofLength: 4))
-        self.shpLength = UInt64((l[0] as! Int) * 2)
+        self.shpLength = UInt64(Swift.max(0, (l[0] as! Int) * 2))
         
         let a = try unpack("<ii", f.readData(ofLength: 8))
         //let version = a[0] as! Int
         let shapeTypeInt = a[1] as! Int
-        guard let shapeType = ShapeType(rawValue: shapeTypeInt) else {
-            assertionFailure("-- unknown shapetype \(shapeTypeInt)")
-            return
-        }
+        guard let shapeType = ShapeType(rawValue: shapeTypeInt) else { throw Error.invalidShapeType(shapeTypeInt) }
+        
         self.shapeType = shapeType
         
         let b = try unpack("<4d", f.readData(ofLength: 32)).map({ $0 as! Double })
@@ -375,7 +386,7 @@ public class SHPReader {
     func shapeAtOffset(_ offset:UInt64) throws -> (next:UInt64, shape:Shape)? {
         
         if offset == shpLength { return nil }
-        assert(offset < shpLength, "trying to read shape at offset \(offset), but shpLength is only \(shpLength)")
+        else if offset > shpLength { throw Error.offsetOutOfLength(offset, shpLength) }
         
         let record = Shape()
         var nParts : Int = 0
@@ -389,11 +400,12 @@ public class SHPReader {
         //let recNum = l[0] as! Int
         let recLength = l[1] as! Int
         
-        let next = f.offsetInFile + UInt64((2 * recLength))
+        let next = f.offsetInFile + UInt64(Swift.max(0, 2 * recLength))
         
         let shapeTypeInt = try unpack("<i", f.readData(ofLength: 4))[0] as! Int
+        guard let shapeType = ShapeType(rawValue: shapeTypeInt) else { throw Error.invalidShapeType(shapeTypeInt) }
         
-        record.shapeType = ShapeType(rawValue: shapeTypeInt)!
+        record.shapeType = shapeType
         
         if shapeType.hasBoundingBox {
             let a = try unpack("<4d", f.readData(ofLength: 32)).map({ $0 as! Double })
@@ -402,10 +414,12 @@ public class SHPReader {
         
         if shapeType.hasParts {
             nParts = try unpack("<i", f.readData(ofLength: 4))[0] as! Int
+            nParts = Swift.max(0, nParts)
         }
         
         if shapeType.hasPoints {
             nPoints = try unpack("<i", f.readData(ofLength: 4))[0] as! Int
+            nPoints = Swift.max(0, nPoints)
         }
         
         if nParts > 0 {
@@ -476,7 +490,7 @@ extension SHPReader: Sequence {
         var nextIndex : UInt64 = 100
         
         return AnyIterator {
-            if let (next, shape) = try! self.shapeAtOffset(nextIndex) {
+            if let nextAndShape = try? self.shapeAtOffset(nextIndex), let (next, shape) = nextAndShape {
                 nextIndex = next
                 return shape
             }
@@ -679,7 +693,7 @@ extension ShapefileReader: Collection {
     
     public subscript(position: Int) -> Shape {
         // Tolerates the absence of indices file, as well as offset errors.
-        if let offset = shx?.shapeOffsetAtIndex(position), let shape = (try? shp.shapeAtOffset(UInt64(offset))?.shape) as? Shape {
+        if let offset = shx?.shapeOffsetAtIndex(position), let nextAndShape = try? shp.shapeAtOffset(UInt64(offset)), let shape = nextAndShape?.shape {
             return shape
         }
         else {
