@@ -88,6 +88,7 @@
 		EC3ABFD9211235D000C3FAAF /* g2g15.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = g2g15.zip; sourceTree = "<group>"; };
 		EC42D32B2125BEDC003CACFC /* 01-009_OpenGIS_Implementation_Specification_Coordinate_Transformation_Services_Revision_1.00.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "01-009_OpenGIS_Implementation_Specification_Coordinate_Transformation_Services_Revision_1.00.pdf"; sourceTree = "<group>"; };
 		EC42D32C2125CD75003CACFC /* Shapefile.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Shapefile.podspec; sourceTree = "<group>"; };
+		EC5096B12148250F00A65DFB /* refsys_e.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = refsys_e.pdf; sourceTree = "<group>"; };
 		EC522422211C6B50009F0491 /* Example.wkt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Example.wkt; sourceTree = "<group>"; };
 		EC6FD9B32110E37600DACC6F /* rgb.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rgb.txt; sourceTree = "<group>"; };
 		ECF285282119CBB2001D376A /* CoordinateSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateSystem.swift; sourceTree = "<group>"; };
@@ -136,6 +137,7 @@
 				03B708881CA5B1A000F3B3A0 /* plz_p1.txt */,
 				032E45ED1CA3E12A006C4622 /* Conditions_d'exploitation-Copyright_OFS_GEOSTAT.pdf */,
 				EC42D32B2125BEDC003CACFC /* 01-009_OpenGIS_Implementation_Specification_Coordinate_Transformation_Services_Revision_1.00.pdf */,
+				EC5096B12148250F00A65DFB /* refsys_e.pdf */,
 			);
 			path = data;
 			sourceTree = "<group>";

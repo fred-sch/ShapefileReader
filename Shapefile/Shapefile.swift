@@ -574,11 +574,38 @@ public class SHXReader {
 
 public class PRJReader {
     
+    public enum Error: Swift.Error {
+        case coordinateSystemNotDefined
+        case coordinateSystemNotSupported(CoordinateSystem)
+        
+        var localizedDescription: String {
+            switch self {
+            case .coordinateSystemNotDefined: return "Coordinate system not defined"
+            case .coordinateSystemNotSupported(let cs): return "Coordinate system \"\(cs.name)\" not supported"
+            }
+        }
+    }
+
+    
     public let cs: Varied<CoordinateSystem>
+    
     
     init(url: URL) throws {
         let data = try Data(contentsOf: url)
         cs = try WKTDecoder().decode(Varied<CoordinateSystem>.self, from: data)
+    }
+    
+    
+    func coordinateConverter() throws -> (CGPoint) -> CLLocationCoordinate2D {
+        
+        guard let cs = cs.entity else { throw Error.coordinateSystemNotDefined }
+        
+        switch cs {
+        case is GeographicCS where cs.name.range(of: "wgs.*84", options: [.regularExpression, .caseInsensitive]) != nil:
+            return { CLLocationCoordinate2D(latitude: CLLocationDegrees($0.y), longitude: CLLocationDegrees($0.x)) }
+        default:
+            throw Error.coordinateSystemNotSupported(cs)
+        }
     }
 }
 
@@ -589,15 +616,11 @@ public class ShapefileReader {
     public enum Error: Swift.Error {
         case shpFileNotFound(at: URL)
         case shapeNotFound(at: Int)
-        case coordinateSystemNotDefined
-        case coordinateSystemNotSupported(CoordinateSystem)
         
         var localizedDescription: String {
             switch self {
             case .shpFileNotFound(let url): return "Shapefile not found at \(url)"
             case .shapeNotFound(let index): return "Shape not found at index \(index)"
-            case .coordinateSystemNotDefined: return "Coordinate system not defined"
-            case .coordinateSystemNotSupported(let cs): return "Coordinate system \"\(cs.name)\" not supported"
             }
         }
     }
@@ -664,15 +687,47 @@ public class ShapefileReader {
     }
     
     /// Can be overridden to support coordinate systems other than WGS84.
-    open func pointsCoordinatesForShape(at index: Int) throws -> [CLLocationCoordinate2D] {
+    open func coordinateConverter() throws -> (CGPoint) -> CLLocationCoordinate2D {
+        
+        guard let converter = try prj?.coordinateConverter() else { throw PRJReader.Error.coordinateSystemNotDefined }
+
+        return converter
+    }
     
+    
+    public func pointsCoordinatesForShape(at index: Int) throws -> [CLLocationCoordinate2D] {
+        
         guard index < count else { throw Error.shapeNotFound(at: index) }
         
-        guard let cs = prj?.cs.entity else { throw Error.coordinateSystemNotDefined }
+        let converter = try coordinateConverter()
         
-        guard cs is GeographicCS, cs.name.range(of: "wgs.*84", options: [.regularExpression, .caseInsensitive]) != nil else { throw Error.coordinateSystemNotSupported(cs) }
+        return self[index].points.map(converter)
+    }
+    
+    
+    public func mbrCoordinates() throws -> (min: CLLocationCoordinate2D, max: CLLocationCoordinate2D) {
         
-        return self[index].points.map { CLLocationCoordinate2D(latitude: CLLocationDegrees($0.y), longitude: CLLocationDegrees($0.x)) }
+        let converter = try coordinateConverter()
+
+        let min = converter(CGPoint(x: shp.bbox.x_min, y: shp.bbox.y_min))
+        let max = converter(CGPoint(x: shp.bbox.x_max, y: shp.bbox.y_max))
+
+        return (min, max)
+    }
+    
+    
+    public func centerCoordinate() throws -> CLLocationCoordinate2D {
+        
+        let mbr = try mbrCoordinates()
+        let lat1 = mbr.min.latitude.degreesToRadians
+        let lon1 = mbr.min.longitude.degreesToRadians
+        let lat2 = mbr.max.latitude.degreesToRadians
+        let lon2 = mbr.max.longitude.degreesToRadians
+        let x = (cos(lat1) * cos(lon1) + cos(lat2) * cos(lon2)) / 2
+        let y = (cos(lat1) * sin(lon1) + cos(lat2) * sin(lon2)) / 2
+        let z = (sin(lat1) + sin(lat2)) / 2
+
+        return CLLocationCoordinate2D(latitude: atan2(z, hypot(x, y)).radiansToDegrees, longitude: atan2(y, x).radiansToDegrees)
     }
 }
 
@@ -709,4 +764,13 @@ extension ShapefileReader: Collection {
     public var endIndex: Int {
         return shx?.numberOfShapes ?? shp.reduce(0) { count, _ in count + 1 }
     }
+}
+
+
+
+extension CLLocationDegrees {
+    
+    var degreesToRadians: Double { return self * .pi / 180 }
+    
+    var radiansToDegrees: Double { return self * 180 / .pi }
 }
