@@ -12,7 +12,7 @@ import Cocoa
 
 func drawAltitudes() throws {
     
-    let sr = try ShapefileReader(url: Bundle.main.url(forResource: "g2g15", withExtension: "zip")!)
+    let sr = try ShapefileReader(url: Bundle.main.url(forResource: "g2g15", withExtension: "shp")!)
     
     let b = ShapefileBitmap(maxWidth: 2000, maxHeight: 2000, bbox: sr.shp.bbox, color: "SkyBlue")!
     

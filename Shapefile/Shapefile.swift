@@ -3,7 +3,8 @@
 //  Unpack
 //
 //  Created by nst on 12/03/16.
-//  Copyright © 2016-2018 Nicolas Seriot, Alexey Demin. All rights reserved.
+//  Copyright © 2016 Nicolas Seriot. All rights reserved.
+//  Copyright © 2018 Alexey Demin. All rights reserved.
 //
 
 // References:
@@ -12,7 +13,6 @@
 
 import Foundation
 import CoreGraphics
-import ZIPFoundation
 import CoreLocation
 
 
@@ -614,13 +614,13 @@ public class PRJReader {
 public class ShapefileReader {
     
     public enum Error: Swift.Error {
-        case shpFileNotFound(at: URL)
-        case shapeNotFound(at: Int)
+        case noShpFile(in: URL)
+        case noShape(at: Int)
         
         var localizedDescription: String {
             switch self {
-            case .shpFileNotFound(let url): return "Shapefile not found at \(url)"
-            case .shapeNotFound(let index): return "Shape not found at index \(index)"
+            case .noShpFile(let url): return "URL \(url) doesn't point to .shp file"
+            case .noShape(let index): return "No shape at index \(index)"
             }
         }
     }
@@ -630,7 +630,7 @@ public class ShapefileReader {
     public let shx: SHXReader?
     public let prj: PRJReader?
 
-    /// - Parameter url: Shapefile directory, archive or .shp file.
+    /// - Parameter url: URL pointing to .shp file.
     public init(url: URL) throws {
         
         let shpExtension = "shp"
@@ -638,40 +638,17 @@ public class ShapefileReader {
         let shxExtension = "shx"
         let prjExtension = "prj"
 
-        let shpURL: URL
-        if url.isFileURL, url.pathExtension == shpExtension {
-            shpURL = url
-        }
-        else {
-            let directoryURL: URL
-            if url.hasDirectoryPath {
-                directoryURL = url
-            }
-            else {
-                let shapeName = url.deletingPathExtension().lastPathComponent
-                let tempDirectoryURL = FileManager.default.temporaryDirectory.appendingPathComponent(shapeName, isDirectory: true)
-                try? FileManager.default.removeItem(at: tempDirectoryURL)
-                try FileManager.default.unzipItem(at: url, to: tempDirectoryURL)
-                directoryURL = tempDirectoryURL
-            }
-            
-            if let firstURL = (FileManager.default.enumerator(at: directoryURL, includingPropertiesForKeys: [.isRegularFileKey, .nameKey])?.lazy.first {
-                if let url = $0 as? URL {
-                    return url.isFileURL && url.pathExtension == shpExtension
-                } else {
-                    return false
-                } }) as? URL {
-                shpURL = firstURL
-            }
-            else {
-                throw Error.shpFileNotFound(at: url)
-            }
+        let baseURL: URL
+        if !url.hasDirectoryPath, url.pathExtension == shpExtension {
+            baseURL = url.deletingPathExtension()
+        } else {
+            throw Error.noShpFile(in: url)
         }
         
-        shp = try SHPReader(url: shpURL)
-        dbf = try? DBFReader(url: shpURL.deletingPathExtension().appendingPathExtension(dbfExtension))
-        shx = try? SHXReader(url: shpURL.deletingPathExtension().appendingPathExtension(shxExtension))
-        prj = try? PRJReader(url: shpURL.deletingPathExtension().appendingPathExtension(prjExtension))
+        shp = try SHPReader(url: baseURL.appendingPathExtension(shpExtension))
+        dbf = try? DBFReader(url: baseURL.appendingPathExtension(dbfExtension))
+        shx = try? SHXReader(url: baseURL.appendingPathExtension(shxExtension))
+        prj = try? PRJReader(url: baseURL.appendingPathExtension(prjExtension))
     }
     
     
@@ -697,7 +674,7 @@ public class ShapefileReader {
     
     public func pointsCoordinatesForShape(at index: Int) throws -> [CLLocationCoordinate2D] {
         
-        guard index < count else { throw Error.shapeNotFound(at: index) }
+        guard index < count else { throw Error.noShape(at: index) }
         
         let converter = try coordinateConverter()
         

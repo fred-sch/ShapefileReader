@@ -28,6 +28,4 @@ Internally, it builds the three following objects, depending on the available au
 
   s.source_files  = "Shapefile/Shapefile.swift", "vendor/BinUtils.swift", "vendor/CoordinateSystem.swift"
 
-  s.dependency "ZIPFoundation", "~> 0.9"
-
 end

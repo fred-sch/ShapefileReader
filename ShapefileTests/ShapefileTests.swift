@@ -3,7 +3,8 @@
 //  ShapefileTests
 //
 //  Created by nst on 20/03/16.
-//  Copyright © 2016-2018 Nicolas Seriot, Alexey Demin. All rights reserved.
+//  Copyright © 2016 Nicolas Seriot. All rights reserved.
+//  Copyright © 2018 Alexey Demin. All rights reserved.
 //
 
 import XCTest
