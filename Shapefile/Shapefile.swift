@@ -16,18 +16,6 @@ import CoreGraphics
 import CoreLocation
 
 
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-
 public enum ShapeType : Int {
     case nullShape = 0
     case point = 1
@@ -474,7 +462,7 @@ public class SHPReader {
         
         if shapeType.hasSingleM {
             let a = try unpack("<d", f.readData(ofLength: 8)).map({ $0 as? Double })
-            let m = a[0] < -10e38 ? nil : a[0]
+            let m = a[0].flatMap { $0 < -10e38 ? nil : $0 }
             record.m = [m]
         }
         
