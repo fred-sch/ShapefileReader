@@ -32,13 +32,13 @@ func drawAltitudes() throws {
     
     assert(sr.dbf!.numberOfRecords == sr.shx!.numberOfShapes)
     
-    let altitudes = try! sr.dbf!.recordGenerator().map{ $0[15] as! Int }
+    let altitudes = try! sr.dbf!.map{ $0[15] as! Int }
     let alt_min = altitudes.min()!
     let alt_max = altitudes.max()!
     
     /**/
     
-    for (shape, record) in sr.shapeAndRecordGenerator() {
+    for (shape, record) in zip(sr.shp, sr.dbf!) {
         let altitude = record[15] as! Int
         
         let factor = Double(altitude - alt_min) / Double(alt_max - alt_min)
@@ -221,7 +221,7 @@ func drawZIPCodes() throws {
     printZipDistribution(zipForTownCode)
     
     // g2g15.shp // communes
-    let sr = try ShapefileReader(url: Bundle.main.url(forResource: "g2g15", withExtension: "zip")!)
+    let sr = try ShapefileReader(url: Bundle.main.url(forResource: "g2g15", withExtension: "shp")!)
     
     let b = ShapefileBitmap(maxWidth: 2000, maxHeight: 2000, bbox: sr.shp.bbox, color: "SkyBlue")!
     
@@ -236,7 +236,7 @@ func drawZIPCodes() throws {
     
     b.setAllowsAntialiasing(true)
     
-    for (shape, record) in sr.shapeAndRecordGenerator() {
+    for (shape, record) in zip(sr.shp, sr.dbf!) {
         let n = record[0] as! Int
         
         var color = NSColor.black
@@ -252,9 +252,9 @@ func drawZIPCodes() throws {
     }
     
     // g1k15.shp // cantons
-    let src = try ShapefileReader(url: Bundle.main.url(forResource: "g1k15", withExtension: "zip")!)
+    let src = try ShapefileReader(url: Bundle.main.url(forResource: "g1k15", withExtension: "shp")!)
     
-    for shape in src.shp.shapeGenerator() {
+    for shape in src.shp {
         b.shape(shape, NSColor.clear, lineWidth: 1.5)
     }
     
@@ -305,7 +305,7 @@ func drawZIPCodes() throws {
 }
 
 func drawZIPCodesPDF() throws {
-    let sr = try ShapefileReader(url: Bundle.main.url(forResource: "g2g15", withExtension: "zip")!)
+    let sr = try ShapefileReader(url: Bundle.main.url(forResource: "g2g15", withExtension: "shp")!)
     let view = ShapefileView(maxWidth: 2000, maxHeight: 2000, bbox:sr.shp.bbox, color:"SkyBlue")!
     let pdfData = view.dataWithPDF(inside: view.frame)
     let path = "/tmp/switzerland_zip.pdf"
@@ -316,5 +316,5 @@ func drawZIPCodesPDF() throws {
 }
 
 try! drawAltitudes()
-//try! drawZIPCodes()
-//try! drawZIPCodesPDF()
+try! drawZIPCodes()
+try! drawZIPCodesPDF()

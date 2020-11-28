@@ -44,7 +44,7 @@ class ShapefileBitmap : BitmapCanvas {
         self.cgContext.scaleBy(x: CGFloat(scale), y: CGFloat(scale))
         self.cgContext.translateBy(x: CGFloat(-self.bbox.x_min), y: CGFloat(-self.bbox.y_min))
         
-        for points in shape.partPointsGenerator() {
+        for points in shape {
             self.polygon(points, lineWidth:lineWidth / CGFloat(scale), fill:color)
         }
         

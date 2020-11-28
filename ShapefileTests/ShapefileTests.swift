@@ -44,7 +44,7 @@ class ShapefileTests: XCTestCase {
 
         XCTAssertEqual(sr.dbf!.numberOfRecords, 26)
 
-        let records = try! sr.dbf!.allRecords()
+        let records = Array(sr.dbf!)
         XCTAssertEqual(records.count, 26)
 
         let rec = try! sr.dbf!.recordAtIndex(1)
@@ -67,7 +67,7 @@ class ShapefileTests: XCTestCase {
         XCTAssertEqual(shape2.points.count, 531)
         XCTAssert(shape2.bbox.x_max > 0)
         
-        XCTAssertEqual(shapes.count, try! sr.dbf!.allRecords().count)
+        XCTAssertEqual(shapes.count, sr.dbf!.count)
     }
 
     

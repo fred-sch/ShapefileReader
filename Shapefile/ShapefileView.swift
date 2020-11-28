@@ -41,7 +41,7 @@ class ShapefileView : CanvasView {
         
         super.draw(dirtyRect)
         
-        let shapefileReader = try! ShapefileReader(url: Bundle.main.url(forResource: "g2g15", withExtension: "zip")!)
+        let shapefileReader = try! ShapefileReader(url: Bundle.main.url(forResource: "g2g15", withExtension: "shp")!)
         
         let context = unsafeBitCast(NSGraphicsContext.current!.graphicsPort, to: CGContext.self)
         
@@ -63,7 +63,7 @@ class ShapefileView : CanvasView {
         self.text("Generated with ShapefileReader https://github.com/nst/ShapefileReader", P(10,self.bounds.height-35))
         self.text("Data: Federal Statistical Office (FSO), GEOSTAT: g2g15, g1k15", P(10,self.bounds.height-20))
         
-        for (shape, record) in shapefileReader.shapeAndRecordGenerator() {
+        for (shape, record) in zip(shapefileReader.shp, shapefileReader.dbf!) {
             //print(record)
             let n = record[0] as! Int
             
@@ -78,9 +78,9 @@ class ShapefileView : CanvasView {
         }
         
         // g1k15.shp // cantons
-        let src = try! ShapefileReader(url: Bundle.main.url(forResource: "g1k15", withExtension: "zip")!)
+        let src = try! ShapefileReader(url: Bundle.main.url(forResource: "g1k15", withExtension: "shp")!)
         
-        for shape in src.shp.shapeGenerator() {
+        for shape in src.shp {
             self.shape(context, shape, NSColor.clear, lineWidth: 1.5)
         }
         
@@ -131,7 +131,7 @@ class ShapefileView : CanvasView {
         context?.scaleBy(x: CGFloat(scale), y: CGFloat(scale))
         context?.translateBy(x: CGFloat(-self.bbox.x_min), y: CGFloat(-self.bbox.y_min))
         
-        for points in shape.partPointsGenerator() {
+        for points in shape {
             self.polygon(points, lineWidth:lineWidth / CGFloat(scale), fill:color)
         }
         

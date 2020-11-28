@@ -21,10 +21,10 @@ Most usages of `ShapefileReader` will remain like:
 guard let sr = ShapefileReader(path: "g1g15.shp") else { assertionFailure() }
 
 // iterate over both shapes and records
-for (shape, record) in sr.shapeAndRecordGenerator() {
+for (shape, record) in zip(sr.shp, sr.dbf!) {
     // record is [AnyObject]
 
-    for points in shape.partPointsGenerator() {
+    for points in shape {
         // draw polygon with [CGPoint]
     }
 }
@@ -42,7 +42,7 @@ if let dbf = sr.dbf {
     print(dbf.fields)
     
     // iterate over records
-    for r in dbf.recordGenerator() {
+    for r in dbf {
         // ...
     }
     

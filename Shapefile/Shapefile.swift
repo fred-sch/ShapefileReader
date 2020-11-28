@@ -74,14 +74,18 @@ public class Shape {
     }
     
     public internal(set) var shapeType: ShapeType
-    public internal(set) var points: [CGPoint] = []
+    var points: [CGPoint] = []
     var bbox : (x_min:Double, y_min:Double, x_max:Double, y_max:Double) = (0.0,0.0,0.0,0.0)
     var parts : [Int] = []
     var partTypes : [Int] = []
     var z : Double = 0.0
     var m : [Double?] = []
+}
+
+
+extension Shape: Sequence {
     
-    func partPointsGenerator() -> AnyIterator<[CGPoint]> {
+    public func makeIterator() -> AnyIterator<[CGPoint]> {
         
         var indices = Array(self.parts)
         indices.append(self.points.count-1)
@@ -108,7 +112,7 @@ public class DBFReader {
     // dBase III+ specs http://www.oocities.org/geoff_wass/dBASE/GaryWhite/dBASE/FAQ/qformt.htm#A
     // extended with dBase IV 2.0 'F' type
 
-    typealias DBFRecord = [Any]
+    public typealias DBFRecord = [Any]
     
     var fileHandle : FileHandle!
     var numberOfRecords : Int!
@@ -237,24 +241,32 @@ public class DBFReader {
         return record
     }
     
-    subscript(i:Int) -> DBFRecord {
-        return try! recordAtIndex(i)
-    }
-    
     func recordAtIndex(_ i:Int = 0) throws -> DBFRecord {
         
-        guard let f = self.fileHandle else {
-            print("no dbf")
-            return []
-        }
-        
-        f.seek(toFileOffset: 0)
         assert(headerLength != 0)
         let offset = headerLength + (i * recordLengthFromHeader)
         return try self.recordAtOffset(UInt64(offset))
     }
     
-    func recordGenerator() throws -> AnyIterator<DBFRecord> {
+    fileprivate func buildDBFRecordFormat() -> String {
+        let a = self.fields.filter({ $0[2] is Int }).map({ $0[2] })
+        let sizes = a as! [Int]
+        let totalSize = sizes.reduce(0, +)
+        let format = "<" + sizes.map( { String($0) + "s" } ).joined(separator: "")
+        
+        if totalSize != recordLengthFromHeader {
+            print("-- error: record size declated in header \(recordLengthFromHeader) != record size declared in fields format \(totalSize)")
+            recordLengthFromHeader = totalSize
+        }
+        
+        return format
+    }
+}
+
+
+extension DBFReader: Sequence {
+    
+    public func makeIterator() -> AnyIterator<DBFRecord> {
         
         guard let n = self.numberOfRecords else {
             return AnyIterator {
@@ -272,33 +284,18 @@ public class DBFReader {
             return rec
         }
     }
+}
+
+
+extension DBFReader: Collection {
+
+    public var startIndex: Int { 0 }
     
-    func allRecords() throws -> [DBFRecord] {
-        
-        var records : [DBFRecord] = []
-        
-        let generator = try self.recordGenerator()
-        
-        while let r = generator.next() {
-            records.append(r)
-        }
-        
-        return records
-    }
+    public var endIndex: Int { numberOfRecords }
     
-    fileprivate func buildDBFRecordFormat() -> String {
-        let a = self.fields.filter({ $0[2] is Int }).map({ $0[2] })
-        let sizes = a as! [Int]
-        let totalSize = sizes.reduce(0, +)
-        let format = "<" + sizes.map( { String($0) + "s" } ).joined(separator: "")
-        
-        if totalSize != recordLengthFromHeader {
-            print("-- error: record size declated in header \(recordLengthFromHeader) != record size declared in fields format \(totalSize)")
-            recordLengthFromHeader = totalSize
-        }
-        
-        return format
-    }
+    public func index(after i: Int) -> Int { i + 1 }
+    
+    public subscript(position: Int) -> DBFRecord { try! recordAtIndex(position) }
 }
 
 
@@ -639,18 +636,6 @@ public class ShapefileReader {
         prj = try? PRJReader(url: baseURL.appendingPathExtension(prjExtension))
     }
     
-    
-    func shapeAndRecordGenerator() -> AnyIterator<(Shape, DBFReader.DBFRecord)> {
-        
-        var i = 0
-        
-        return AnyIterator {
-            guard i < self.count, let r = self.dbf?[i] else { return nil }
-            defer { i += 1 }
-            return (self[i], r)
-        }
-    }
-    
     /// Can be overridden to support coordinate systems other than WGS84.
     open func coordinateConverter() throws -> (CGPoint) -> CLLocationCoordinate2D {
         
@@ -699,17 +684,17 @@ public class ShapefileReader {
 
 extension ShapefileReader: Sequence {
     
-    public func makeIterator() -> AnyIterator<Shape> {
-        return shp.makeIterator()
-    }
+    public func makeIterator() -> AnyIterator<Shape> { shp.makeIterator() }
 }
 
 
 extension ShapefileReader: Collection {
+
+    public var startIndex: Int { 0 }
     
-    public func index(after i: Int) -> Int {
-        return i + 1
-    }
+    public var endIndex: Int { shx?.numberOfShapes ?? shp.reduce(0) { count, _ in count + 1 } }
+    
+    public func index(after i: Int) -> Int { i + 1 }
     
     public subscript(position: Int) -> Shape {
         // Tolerates the absence of indices file, as well as offset errors.
@@ -720,14 +705,6 @@ extension ShapefileReader: Collection {
             assert(ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil, "No tolerance to the indices file in tests")
             return shp.dropFirst(position).makeIterator().next()!
         }
-    }
-    
-    public var startIndex: Int {
-        return 0
-    }
-    
-    public var endIndex: Int {
-        return shx?.numberOfShapes ?? shp.reduce(0) { count, _ in count + 1 }
     }
 }
 
