@@ -27,12 +27,12 @@ func drawAltitudes() throws {
     
     b.setAllowsAntialiasing(true)
     
-    print("-- numberOfRecords:", sr.dbf!.numberOfRecords)
+    print("-- numberOfRecords:", sr.dbf!.numberOfRecords!)
     print("-- numberOfShapes:", sr.shx!.numberOfShapes)
     
     assert(sr.dbf!.numberOfRecords == sr.shx!.numberOfShapes)
     
-    let altitudes = try! sr.dbf!.map{ $0[15] as! Int }
+    let altitudes = sr.dbf!.map { $0[15] as! Int }
     let alt_min = altitudes.min()!
     let alt_max = altitudes.max()!
     

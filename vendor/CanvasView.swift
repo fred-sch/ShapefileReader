@@ -27,8 +27,8 @@ class CanvasView : NSView {
         let color = color_.color
         
         let attr = [
-            NSAttributedStringKey.font:font,
-            NSAttributedStringKey.foregroundColor:color
+            NSAttributedString.Key.font:font,
+            NSAttributedString.Key.foregroundColor:color
         ]
         
         cgContext.saveGState()

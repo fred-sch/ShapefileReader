@@ -20,7 +20,7 @@ public protocol WKTEntity: Decodable {
 public struct Varied<T>: Decodable {
     
     private static var supportedTypes: [WKTEntity.Type] {
-        switch T.self {
+        switch T.self as Any {
         case is CoordinateSystem.Protocol:
             return [GeographicCS.self, ProjectedCS.self, GeocentricCS.self, VertCS.self, CompdCS.self, FittedCS.self, LocalCS.self]
         case is MathTransform.Protocol:
@@ -30,16 +30,12 @@ public struct Varied<T>: Decodable {
         }
     }
     
-    private static func type(for keyword: String) -> WKTEntity.Type? {
-        return supportedTypes.first { $0.keyword == keyword }
-    }
-
     public let entity: T?
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let keyword = try container.decode(String.self)
-        let type = Varied<T>.type(for: keyword)
+        let type = Self.supportedTypes.first { $0.keyword == keyword }
         let entity = try type?.init(from: decoder)
         self.entity = entity as? T
     }

@@ -143,18 +143,18 @@ public class DBFReader {
         
         let a = try unpack("<BBBBIHH20x", f.readData(ofLength: 32))
         
-        self.fileType = a[0] as! Int
+        self.fileType = (a[0] as! Int)
         let YY = a[1] as! Int
         let MM = a[2] as! Int
         let DD = a[3] as! Int
         self.lastUpdate = "\(1900+YY)-\(String(format: "%02d", MM))-\(String(format: "%02d", DD))"
-        self.numberOfRecords = a[4] as! Int
-        self.headerLength = a[5] as! Int
-        self.recordLengthFromHeader = a[6] as! Int
+        self.numberOfRecords = (a[4] as! Int)
+        self.headerLength = (a[5] as! Int)
+        self.recordLengthFromHeader = (a[6] as! Int)
         
-        print("-- fileType:", fileType)
-        print("-- lastUpdate:", lastUpdate)
-        print("-- numberOfRecords:", numberOfRecords)
+        print("-- fileType:", fileType!)
+        print("-- lastUpdate:", lastUpdate!)
+        print("-- numberOfRecords:", numberOfRecords!)
         
         let numFields = (headerLength - 33) / 32
         
@@ -255,7 +255,7 @@ public class DBFReader {
         let format = "<" + sizes.map( { String($0) + "s" } ).joined(separator: "")
         
         if totalSize != recordLengthFromHeader {
-            print("-- error: record size declated in header \(recordLengthFromHeader) != record size declared in fields format \(totalSize)")
+            print("-- error: record size declated in header \(recordLengthFromHeader!) != record size declared in fields format \(totalSize)")
             recordLengthFromHeader = totalSize
         }
         
@@ -475,7 +475,7 @@ extension SHPReader: Sequence {
         var nextIndex : UInt64 = 100
         
         return AnyIterator {
-            if let nextAndShape = try? self.shapeAtOffset(nextIndex), let (next, shape) = nextAndShape {
+            if let (next, shape) = try? self.shapeAtOffset(nextIndex) {
                 nextIndex = next
                 return shape
             }
@@ -698,7 +698,7 @@ extension ShapefileReader: Collection {
     
     public subscript(position: Int) -> Shape {
         // Tolerates the absence of indices file, as well as offset errors.
-        if let offset = shx?.shapeOffsetAtIndex(position), let nextAndShape = try? shp.shapeAtOffset(UInt64(offset)), let shape = nextAndShape?.shape {
+        if let offset = shx?.shapeOffsetAtIndex(position), let shape = try? shp.shapeAtOffset(UInt64(offset))?.shape {
             return shape
         }
         else {

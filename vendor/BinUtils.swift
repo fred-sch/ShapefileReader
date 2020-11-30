@@ -13,6 +13,7 @@ import Foundation
 protocol Unpackable {}
 
 extension NSString: Unpackable {}
+extension String: Unpackable {}
 extension Bool: Unpackable {}
 extension Int: Unpackable {}
 extension Double: Unpackable {}
@@ -25,17 +26,16 @@ extension DataConvertible {
     
     init?(data: Data) {
         guard data.count == MemoryLayout<Self>.size else { return nil }
-        self = data.withUnsafeBytes { $0.pointee }
+        self = data.withUnsafeBytes { $0.load(as: Self.self) }
     }
     
     init?(bytes: [UInt8]) {
-        let data = Data(bytes:bytes)
+        let data = Data(bytes)
         self.init(data:data)
     }
     
     var data: Data {
-        var value = self
-        return Data(buffer: UnsafeBufferPointer(start: &value, count: 1))
+        withUnsafeBytes(of: self) { Data($0) }
     }
 }
 
@@ -66,9 +66,7 @@ extension String {
 
 extension Data {
     var bytes : [UInt8] {
-        return self.withUnsafeBytes {
-            [UInt8](UnsafeBufferPointer(start: $0, count: self.count))
-        }
+        Array(self)
     }
 }
 

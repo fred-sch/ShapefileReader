@@ -65,7 +65,7 @@ extension String : ConvertibleToNSColor {
             }
         }
         
-        if let c = X11Colors.sharedInstance.colorList.color(withKey: NSColor.Name(rawValue: self.lowercased())) {
+        if let c = X11Colors.sharedInstance.colorList.color(withKey: self.lowercased()) {
             return c
         }
         
@@ -101,7 +101,7 @@ class X11Colors {
 
     static let sharedInstance = X11Colors(namePrettifier: { $0.lowercased() })
     
-    var colorList = NSColorList(name: NSColorList.Name(rawValue: "X11"))
+    var colorList = NSColorList(name: "X11")
     
     // https://cgit.freedesktop.org/xorg/app/rgb/plain/rgb.txt
     init(path:String = Bundle.main.path(forResource: "rgb", ofType: "txt")!, namePrettifier:@escaping (_ original:String) -> (String)) {
@@ -123,7 +123,7 @@ class X11Colors {
             let prettyName = namePrettifier(name)
             
             let color = NSColor(calibratedRed: r/255.0, green: g/255.0, blue: b/255.0, alpha: 1.0)
-            self.colorList.setColor(color, forKey: NSColor.Name(rawValue: prettyName))
+            self.colorList.setColor(color, forKey: prettyName)
             
             //print("\(name) \t -> \t \(prettyName)")
         }

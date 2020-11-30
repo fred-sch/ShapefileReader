@@ -434,7 +434,7 @@ class BitmapCanvas {
         let textRect : CGRect = text.boundingRect(
             with: maxSize,
             options: NSString.DrawingOptions.usesLineFragmentOrigin,
-            attributes: [NSAttributedStringKey.font: font],
+            attributes: [NSAttributedString.Key.font: font],
             context: nil)
         return textRect.size.width
     }
@@ -473,8 +473,8 @@ class BitmapCanvas {
         let color = color_.color
         
         let attr = [
-            NSAttributedStringKey.font:font,
-            NSAttributedStringKey.foregroundColor:color
+            NSAttributedString.Key.font:font,
+            NSAttributedString.Key.foregroundColor:color
         ]
         
         context.saveGraphicsState()
