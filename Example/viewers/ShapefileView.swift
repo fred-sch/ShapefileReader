@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import ShapefileReader
 
 class ShapefileView : CanvasView {
     

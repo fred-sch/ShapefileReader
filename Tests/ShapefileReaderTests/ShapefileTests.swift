@@ -8,21 +8,20 @@
 //
 
 import XCTest
+@testable import ShapefileReader
 
 
-class ShapefileTests: XCTestCase {
+final class ShapefileTests: XCTestCase {
+        
+    let dbfURL = Bundle.module.url(forResource: "Kantone/Kantone", withExtension: "dbf")!
+    let prjURL = Bundle.module.url(forResource: "Kantone/Kantone", withExtension: "prj")!
+    let sbnURL = Bundle.module.url(forResource: "Kantone/Kantone", withExtension: "sbn")!
+    let sbxURL = Bundle.module.url(forResource: "Kantone/Kantone", withExtension: "sbx")!
+    let shpURL = Bundle.module.url(forResource: "Kantone/Kantone", withExtension: "shp")!
+    let xmlURL = Bundle.module.url(forResource: "Kantone/Kantone", withExtension: "shp.xml")!
+    let shxURL = Bundle.module.url(forResource: "Kantone/Kantone", withExtension: "shx")!
     
-    static let bundle = Bundle(for: ShapefileTests.self)
-    
-    let dbfURL = bundle.url(forResource: "Kantone", withExtension: "dbf")!
-    let prjURL = bundle.url(forResource: "Kantone", withExtension: "prj")!
-    let sbnURL = bundle.url(forResource: "Kantone", withExtension: "sbn")!
-    let sbxURL = bundle.url(forResource: "Kantone", withExtension: "sbx")!
-    let shpURL = bundle.url(forResource: "Kantone", withExtension: "shp")!
-    let xmlURL = bundle.url(forResource: "Kantone", withExtension: "shp.xml")!
-    let shxURL = bundle.url(forResource: "Kantone", withExtension: "shx")!
-    
-    let wktURL = bundle.url(forResource: "Example", withExtension: "wkt")!
+    let wktURL = Bundle.module.url(forResource: "Example", withExtension: "wkt")!
 
     
     override func setUp() {
@@ -93,7 +92,7 @@ class ShapefileTests: XCTestCase {
     func testPrj() {
         
         let sr = try! ShapefileReader(url: shpURL)
-        let cs = sr.prj?.cs.entity as? ProjectedCS
+        let cs = sr.prj?.cs as? ProjectedCS
         XCTAssertEqual(cs?.geographicCS.angularUnit.name, "Degree")
         XCTAssertEqual(cs?.geographicCS.angularUnit.conversionFactor, 0.0174532925199433)
         XCTAssertEqual(cs?.parameters?.first { $0.name == "Longitude_Of_Center" }?.value, 7.439583333333333)
@@ -181,4 +180,16 @@ class ShapefileTests: XCTestCase {
             }
         }
     }
+    
+
+    static var allTests = [
+        ("testRecords", testRecords),
+        ("testShapes", testShapes),
+        ("testShx", testShx),
+        ("testPrj", testPrj),
+        ("testWKTParser", testWKTParser),
+        ("testWKTDecoder", testWKTDecoder),
+        ("testWrongFormats", testWrongFormats),
+        ("testCrashes", testCrashes),
+    ]
 }

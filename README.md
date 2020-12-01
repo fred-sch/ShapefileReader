@@ -26,6 +26,7 @@ for (shape, record) in zip(sr.shp, sr.dbf!) {
 
     for points in shape {
         // draw polygon with [CGPoint]
+        // or map to [CLLocationCoordinate2D] using sr.coordinateConverter()
     }
 }
 ```
@@ -74,22 +75,29 @@ or more simply
 let shape = sr[2]
 ```
 
+PRJ API
+
+```swift
+if let cs = sr.prj?.cs {
+    // use CoordinateSystem information to convert CGPoint to CLLocationCoordinate2D
+}
+```
+You can override sr.coordinateConverter() to support coordinate systems other than WGS84
+
 __Implementation Details__
 
 - shape points are CGPoint arrays
 - record are arrays of Int, Double, Bool or String (no NSDate, no optionals)
 - random access in files and enumerators are used each time it is possible
-- most of time, code will crash when files do not match the specs, feel free to open an issue an join the offending files
+- most of time, code will ignore when files do not match the specs, feel free to open an issue and join the offending files in case of crash
 
 __Tests and Drawing__
 
-The project comes with a unit test target.
+The package comes with a unit test target.
 
-Also, it comes with `BitmapCanvas` and its subclass `BitmapCanvasShapefile` which will generate the following PNG file.
+Also, it comes with a project that contains `BitmapCanvas` and its subclass `BitmapCanvasShapefile` which will generate the following PNG files.
 
-You just need to change the path at the beginning of the `draw()` function in `main.swift` according the project's location.
+<a href="Images/switzerland_altitude.png"><img src="Images/switzerland_altitude.png" width="890" alt="Switzerland Altitude" /></a>
 
-<a href="img/switzerland_altitude.png"><img src="img/switzerland_altitude.png" width="890" alt="Switzerland Altitude" /></a>
-
-<a href="img/switzerland_zip.png"><img src="img/switzerland_zip.png" width="890" alt="Switzerland ZIP Codes" /></a>
+<a href="Images/switzerland_zip.png"><img src="Images/switzerland_zip.png" width="890" alt="Switzerland ZIP Codes" /></a>
 

@@ -1,0 +1,252 @@
+(* Geographic information - Well-known text representation of coordinate reference systems (geodetic, projected) *)
+(* http://docs.opengeospatial.org/is/12-063r5/12-063r5.html *)
+
+(* Characters used in WKT *)
+(* Basic characters *)
+simple Latin upper case letter = 'A' ... 'Z'; (* ISO/IEC 10646:2012 character identifiers U+0041 through U+005A *)
+simple Latin lower case letter = 'a' ... 'z'; (* ISO/IEC 10646:2012 character identifiers U+0061 through U+007A *)
+digit                 = '0' ... '9'; (* ISO/IEC 10646:2012 character identifiers U+0030 through U+0039 *)
+space                 = ' '; (* ISO/IEC 10646:2012 character identifier U+0020 *)
+double quote          = '"'; (* ISO/IEC 10646:2012 character identifier U+0022 *)
+number sign           = '#'; (* ISO/IEC 10646:2012 character identifier U+0023 *)
+percent               = '%'; (* ISO/IEC 10646:2012 character identifier U+0025 *)
+ampersand             = '&'; (* ISO/IEC 10646:2012 character identifier U+0026 *)
+quote                 = "'"; (* ISO/IEC 10646:2012 character identifier U+0027 *)
+left paren            = '('; (* ISO/IEC 10646:2012 character identifier U+0028 *)
+right paren           = ')'; (* ISO/IEC 10646:2012 character identifier U+0029 *)
+asterisk              = '*'; (* ISO/IEC 10646:2012 character identifier U+002A *)
+plus sign             = '+'; (* ISO/IEC 10646:2012 character identifier U+002B *)
+comma                 = ','; (* ISO/IEC 10646:2012 character identifier U+002C *)
+minus sign            = '-';
+hyphen                = '-'; (* ISO/IEC 10646:2012 character identifier U+002D *)
+period                = '.'; (* ISO/IEC 10646:2012 character identifier U+002E *)
+solidus               = '/'; (* ISO/IEC 10646:2012 character identifier U+002F *)
+colon                 = ':'; (* ISO/IEC 10646:2012 character identifier U+003A *)
+semicolon             = ';'; (* ISO/IEC 10646:2012 character identifier U+003B *)
+less than operator    = '<'; (* ISO/IEC 10646:2012 character identifier U+003C *)
+equals operator       = '='; (* ISO/IEC 10646:2012 character identifier U+003D *)
+greater than operator = '>'; (* ISO/IEC 10646:2012 character identifier U+003E *)
+question mark         = '?'; (* ISO/IEC 10646:2012 character identifier U+003F *)
+left bracket          = '['; (* ISO/IEC 10646:2012 character identifier U+005B *)
+reverse solidus       = '\\'; (* ISO/IEC 10646:2012 character identifier U+005C *)
+right bracket         = ']'; (* ISO/IEC 10646:2012 character identifier U+005D *)
+circumflex            = '^'; (* ISO/IEC 10646:2012 character identifier U+005E *)
+underscore            = '_'; (* ISO/IEC 10646:2012 character identifier U+005F *)
+left brace            = '{'; (* ISO/IEC 10646:2012 character identifier U+007B *)
+vertical bar          = '|'; (* ISO/IEC 10646:2012 character identifier U+007C *)
+right brace           = '}'; (* ISO/IEC 10646:2012 character identifier U+007D *)
+degree symbol         = '°'; (* ISO/IEC 10646:2012 character identifier U+00B0 *)
+
+(* Numbers *)
+number                        = signed numeric literal | unsigned numeric literal;
+signed numeric literal        = [ sign ], unsigned numeric literal;
+unsigned numeric literal      = exact numeric literal | approximate numeric literal;
+approximate numeric literal   = mantissa, 'E', exponent;
+mantissa                      = exact numeric literal;
+exponent                      = signed integer;
+signed integer                = [ sign ], unsigned integer;
+exact numeric literal         = unsigned integer, [ period, [ unsigned integer ] ] | period, unsigned integer;
+unsigned integer              = { digit };
+sign                          = plus sign | minus sign;
+
+(* Date and time *)
+datetime                      = Gregorian calendar datetime | Gregorian ordinal datetime;
+Gregorian calendar datetime   = Gregorian calendar date, [ 24 hour clock ];
+Gregorian calendar date       = year, [ hyphen, month, [ hyphen, day ] ];
+year                          = unsigned integer; (* four digits *)
+month                         = unsigned integer; (* two digits including leading zero if less than 10 *)
+day                           = unsigned integer; (* two digits including leading zero if less than 10 *)
+Gregorian ordinal datetime    = Gregorian ordinal date, [ 24 hour clock ];
+Gregorian ordinal date        = year, [ hyphen, ordinal day ];
+ordinal day                   = unsigned integer; (* three digits including leading zeroes if less than 100 *)
+24 hour clock                 = time designator, hour, [ colon, minute, [ colon, second ] ], time zone designator;
+time designator               = 'T';
+hour                          = unsigned integer; (* two digits including leading zero if less than 10 *)
+minute                        = unsigned integer; (* two digits including leading zero if less than 10 *)
+second                        = seconds integer, [ period, [ seconds fraction ] ]; (* In this International Standard the separator between the integer and fractional parts of a second value shall be a period. The ISO 8601 preference for comma is not permitted. *)
+seconds integer               = unsigned integer; (* two digits including leading zero if less than 10 *)
+seconds fraction              = unsigned integer;
+time zone designator          = utc designator | local time zone designator;
+utc designator                = 'Z';
+local time zone designator    = ( plus sign | minus sign ), hour, [ colon, minute ];
+
+(* CRS WKT characters *)
+left delimiter                = left bracket | left paren; (* In this International Standard the preferred left delimiter is left bracket. left paren is permitted for backward compatibility. Implementations shall be able to read both forms. *)
+right delimiter               = right bracket | right paren; (* See 6.4 *)
+wkt separator                 = comma;
+quoted Latin text             = double quote, { wkt Latin text character }, double quote;
+wkt Latin text character      = simple Latin upper case letter | simple Latin lower case letter | digit | underscore | left bracket | right bracket | left paren | right paren | left brace | right brace | less than operator | equals operator | greater than operator | period | comma | colon | semicolon | plus sign | minus sign | space | number sign | percent | ampersand | quote | asterisk | circumflex | solidus | reverse solidus | question mark | vertical bar | degree symbol | doublequote symbol;
+quoted Unicode text           = double quote, { wkt Unicode text character }, double quote;
+wkt Unicode text character    = nondoublequote character | doublequote symbol;
+nondoublequote character      = simple Latin upper case letter | simple Latin lower case letter | digit | underscore | left bracket | right bracket | left paren | right paren | left brace | right brace | less than operator | equals operator | greater than operator | period | comma | colon | semicolon | plus sign | minus sign | space | number sign | percent | ampersand | quote | asterisk | circumflex | solidus | reverse solidus | question mark | vertical bar | degree symbol; (* A nondoublequote character is any character of the source language character set other than a double quote. *)
+doublequote symbol            = '""'; (* two consecutive double quote characters *)
+
+(* WKT representation of common attributes *)
+(* Scope, extent, identifier and remark *)
+scope extent identifier remark    = [ wkt separator, scope ], [ { wkt separator, extent } ], [ { wkt separator, identifier } ], [ wkt separator, remark];
+
+scope                     = scope keyword, left delimiter, scope text description, right delimiter;
+scope keyword             = 'SCOPE';
+scope text description    = quoted Latin text;
+
+extent    = area description | geographic bounding box | vertical extent | temporal extent; (* Constraint: each extent type shall have a maximum occurrence of 1. *)
+
+area description          = area description keyword, left delimiter, area text description, right delimiter;
+area description keyword  = 'AREA';
+area text description     = quoted Latin text;
+
+geographic bounding box           = geographic bounding box keyword, left delimiter, lower left latitude, wkt separator, lower left longitude, wkt separator, upper right latitude, wkt separator, upper right longitude, right delimiter;
+geographic bounding box keyword   = 'BBOX';
+lower left latitude               = number; (* See text *)
+lower left longitude              = number; (* See text *)
+upper right latitude              = number; (* See text *)
+upper right longitude             = number; (* See text *)
+
+vertical extent                   = vertical extent keyword, left delimiter, vertical extent minimum height, wkt separator, vertical extent maximum height, [ wkt separator, length unit ], right delimiter;
+vertical extent keyword           = 'VERTICALEXTENT';
+vertical extent minimum height    = number;
+vertical extent maximum height    = number;
+
+temporal extent           = temporal extent keyword, left delimiter, temporal extent start, wkt separator, temporal extent end, right delimiter;
+temporal extent keyword   = 'TIMEEXTENT';
+temporal extent start     = datetime | quoted Latin text;
+temporal extent end       = datetime | quoted Latin text;
+
+identifier                    = identifier keyword, left delimiter, authority name, wkt separator, authority unique identifier, [ wkt separator, version ], [ wkt separator, authority citation ], [ wkt separator, id uri ], right delimiter;
+identifier keyword            = 'ID';
+authority name                = quoted Latin text;
+authority unique identifier   = number | quoted Latin text;
+version                       = number | quoted Latin text;
+authority citation            = citation keyword, left delimiter, citation, right delimiter;
+citation keyword              = 'CITATION';
+citation                      = quoted Latin text;
+id uri                        = uri keyword, left delimiter, uri, right delimiter;
+uri keyword                   = 'URI';
+uri                           = quoted Latin text;
+
+remark            = remark keyword, left delimiter, quoted Unicode text, right delimiter;
+remark keyword    = 'REMARK';
+
+(* Unit and unit conversion factor *)
+unit                      = angle unit | length unit | scale unit | parametric unit | time unit;
+angle unit                = angle unit keyword, left delimiter, unit name, wkt separator, conversion factor, [ { wkt separator, identifier } ], right delimiter;
+length unit               = length unit keyword, left delimiter, unit name, wkt separator, conversion factor, [ { wkt separator, identifier } ], right delimiter;
+scale unit                = scale unit keyword, left delimiter, unit name, wkt separator, conversion factor, [ { wkt separator, identifier } ], right delimiter;
+parametric unit           = parametric unit keyword, left delimiter, unit name, wkt separator, conversion factor, [ { wkt separator, identifier } ], right delimiter;
+time unit                 = time unit keyword, left delimiter, unit name, wkt separator, conversion factor, [ { wkt separator, identifier } ], right delimiter;
+angle unit keyword        = 'ANGLEUNIT' | 'UNIT'; (* In this International Standard the preferred keyword is ANGLEUNIT. UNIT is permitted for backward compatibility. Implementations shall be able to read both forms. *)
+length unit keyword       = 'LENGTHUNIT' | 'UNIT'; (* In this International Standard the preferred keyword is LENGTHUNIT. UNIT is permitted for backward compatibility. Implementations shall be able to read both forms. *)
+scale unit keyword        = 'SCALEUNIT' | 'UNIT'; (* In this International Standard the preferred keyword is SCALEUNIT. UNIT is permitted for backward compatibility. Implementations shall be able to read both forms. *)
+parametric unit keyword   = 'PARAMETRICUNIT';
+time unit keyword         = 'TIMEUNIT';
+unit name                 = quoted Latin text;
+conversion factor         = unsigned numeric literal;
+
+(* Coordinate system *)
+coordinate system     = cs keyword, left delimiter, cs type, wkt separator, dimension, [ { wkt separator, identifier } ], right delimiter, { wkt separator, axis }, [ wkt separator, cs unit ];
+cs keyword            = 'CS';
+cs type               = 'affine' | 'Cartesian' | 'cylindrical' | 'ellipsoidal' | 'linear' | 'parametric' | 'polar' | 'spherical' | 'temporal' | 'vertical'; (* See 7.5.2 for constraints *)
+dimension             = '1' | '2' | '3'; (* Unsigned integer. See 7.5.2 for constraints. *)
+axis                  = axis keyword, left delimiter, axis nameAbbrev, wkt separator, axis direction, [ wkt separator, axis order ], [ wkt separator, axis unit ], [ { wkt separator, identifier } ], right delimiter; (* See 7.5.3, 7.5.4 and 7.5.5 for constraints *)
+axis keyword          = 'AXIS';
+axis nameAbbrev       = double quote, ( axis name | axis abbreviation | axis name and abbrev ), double quote;
+axis name             = { wkt Latin text character };
+axis abbreviation     = left paren, { simple Latin letter }, right paren;
+axis name and abbrev  = axis name, space, axis abbreviation;
+axis direction        = 'north', [ wkt separator, meridian ] | 'northNorthEast' | 'northEast' | 'eastNorthEast' | 'east' | 'eastSouthEast' | 'southEast' | 'southSouthEast' | 'south', [ wkt separator, meridian ] | 'southWest' | 'westSouthWest' | 'west' | 'westNorthWest' | 'northWest' | 'northNorthWest' | 'geocentricX' | 'geocentricY' | 'geocentricZ' | 'up' | 'down' | 'forward' | 'aft' | 'port' | 'starboard' | 'clockwise', wkt separator, bearing | 'counterClockwise', wkt separator, bearing | 'columnPositive' | 'columnNegative' | 'rowPositive' | 'rowNegative' | 'displayRight' | 'displayLeft' | 'displayUp' | 'displayDown' | 'future' | 'past' | 'towards' | 'awayFrom' | 'unspecified'; (* See 7.5.4 for constraints *)
+meridian              = meridian keyword, left delimiter, number, wkt separator, angle unit, right delimiter; (* See 7.5.4 for constraints *)
+meridian keyword      = 'MERIDIAN';
+bearing               = bearing keyword, left delimiter, number, right delimiter; (* See 7.5.4 for constraints *)
+bearing keyword       = 'BEARING';
+axis order            = axis order keyword, left delimiter, unsigned integer, right delimiter; (* See 7.5.5 for constraints *)
+axis order keyword    = 'ORDER';
+axis unit             = unit; (* See 7.4 and 7.5.6 for constraints *)
+cs unit               = unit; (* See 7.4 and 7.5.6 for constraints *)
+
+ellipsoidal 2D coordinate system  = cs keyword, left delimiter, ellipsoidal 2D cs type, wkt separator, ellipsoidal 2D dimension, [ { wkt separator, identifier } ], right delimiter, { wkt separator, axis }, [ wkt separator, cs unit ];
+ellipsoidal 2D cs type            = 'ellipsoidal';
+ellipsoidal 2D dimension          = '2';
+
+(* WKT representation of geodetic coordinate reference systems *)
+(* Overview *)
+geodetic crs          = geodetic crs keyword, left delimiter, crs name, wkt separator, geodetic datum, wkt separator, coordinate system, scope extent identifier remark, right delimiter;
+geodetic crs keyword  = 'GEODCRS' | 'GEODETICCRS'; (* In this International Standard for brevity the preferred keyword is GEODCRS. GEODETICCRS is permitted. Implementations should be prepared to read both forms. *)
+crs name              = quoted Latin text; (* See 7.2 *)
+
+(* Geodetic datum *)
+ellipsoid             = ellipsoid keyword, left delimiter, ellipsoid name, wkt separator, semi-major axis, wkt separator, inverse flattening, [ wkt separator, length unit ], [ { wkt separator, identifier } ], right delimiter;
+ellipsoid keyword     = 'ELLIPSOID' | 'SPHEROID'; (* In this International Standard the preferred keyword is ELLIPSOID. SPHEROID is permitted for backward compatibility. Implementations should be prepared to read both forms. *)
+ellipsoid name        = quoted Latin text; (* See 7.2 *)
+semi-major axis       = unsigned numeric literal; (* See below for constraint *)
+inverse flattening    = unsigned numeric literal; (* See below for constraint *)
+
+prime meridian            = prime meridian keyword, left delimiter, prime meridian name, wkt separator, irm longitude, [ wkt separator, angle unit ], [ { wkt separator, identifier } ], right delimiter;
+prime meridian keyword    = 'PRIMEM' | 'PRIMEMERIDIAN'; (* In this International Standard the preferred keyword is PRIMEM for backward compatibility. PRIMEMERIDIAN is permitted. Implementations should be prepared to read both forms. *)
+prime meridian name       = quoted Latin text; (* See 7.2 *)
+irm longitude             = signed numeric literal, [ wkt separator, angle unit ];
+
+geodetic datum            = geodetic datum keyword, left delimiter, datum name, wkt separator, ellipsoid, [ wkt separator, datum anchor ], [ { wkt separator, identifier } ], right delimiter, wkt separator, prime meridian;
+geodetic datum keyword    = 'DATUM' | 'GEODETICDATUM'; (* In this International Standard for compatibility with previous versions of WKT the preferred keyword is DATUM, but for consistency with the other datum types described in Clauses 10 to 14 GEODETICDATUM is permitted. Implementations should be prepared to read both forms. *)
+datum name                = quoted Latin text; (* See 7.2 *)
+datum anchor              = datum anchor keyword, left delimiter, datum anchor description, right delimiter;
+datum anchor keyword      = 'ANCHOR';
+datum anchor description  = quoted Latin text;
+
+(* WKT representation of projected CRSs *)
+(* Overview *)
+projected crs         = projected crs keyword, left delimiter, crs name, wkt separator, base geodetic crs, wkt separator, map projection, wkt separator, coordinate system, scope extent identifier remark, right delimiter;
+projected crs keyword = 'PROJCRS' | 'PROJECTEDCRS'; (* In this International Standard for brevity the preferred keyword is PROJCRS. PROJECTEDCRS is permitted. Implementations should be prepared to read both forms. *)
+crs name              = quoted Latin text; (* See 7.2 *)
+
+(* Base CRS *)
+base geodetic crs         = base geodetic crs keyword, left delimiter, base crs name, wkt separator, geodetic datum, [ wkt separator, ellipsoidal cs unit ], right delimiter;
+base geodetic crs keyword = 'BASEGEODCRS';
+base crs name             = quoted Latin text; (* See 7.2 *)
+ellipsoidal cs unit       = angle unit;
+
+(* Map projection *)
+map projection                = map projection keyword, left delimiter, map projection name, wkt separator, map projection method, { wkt separator, map projection parameter }, [ { wkt separator, identifier } ], right delimiter;
+map projection keyword        = 'CONVERSION';
+map projection name           = quoted Latin text; (* See 7.2 *)
+map projection method         = map projection method keyword, left delimiter, map projection method name, [ { wkt separator, identifier } ], right delimiter;
+map projection method keyword = 'METHOD' | 'PROJECTION'; (* In this International Standard the preferred keyword is METHOD. PROJECTION is permitted for backward compatibility. Implementations should be prepared to read both forms. *)
+map projection method name    = quoted Latin text; (* See 7.2 *)
+map projection parameter      = parameter keyword, left delimiter, parameter name, wkt separator, parameter value, [ wkt separator, map projection parameter unit ], [ { wkt separator, identifier } ], right delimiter;
+parameter keyword             = 'PARAMETER';
+parameter name                = quoted Latin text; (* See 7.2 *)
+parameter value               = signed numeric literal;
+map projection parameter unit = length unit | angle unit | scale unit; (* See 9.3.4 for constraints *)
+
+(* Mapping of concepts from previous versions of CRS WKT *)
+(* Backward compatibility of CRS common attributes *)
+identifier                    = 'AUTHORITY', left delimiter, authority name, wkt separator, authority unique identifier, right delimiter;
+authority name                = quoted Latin text;
+authority unique identifier   = quoted Latin text;
+
+(* Backward compatibility of coordinate reference system components *)
+ellipsoid = 'ELLIPSOID', left delimiter, ellipsoid name, wkt separator, semi-major axis, wkt separator, inverse flattening, right delimiter;
+ellipsoid = 'SPHEROID', left delimiter, ellipsoid name, wkt separator, semi-major axis, wkt separator, inverse flattening, right delimiter;
+
+prime meridian    = 'PRIMEM', left delimiter, prime meridian name, wkt separator, irm longitude, right delimiter;
+
+geodetic datum    = left delimiter, datum name, wkt separator, ellipsoid, right delimiter;
+geodetic datum    = 'DATUM', left delimiter, datum name, wkt separator, ellipsoid, [ towgs84 ], right delimiter;
+
+vertical datum    = 'VERT_DATUM', left delimiter, datum name, wkt separator, datum type, right delimiter;
+engineering datum = 'LOCAL_DATUM', left delimiter, datum name, wkt separator, datum type, right delimiter;
+
+map projection            = 'PROJECTION', left delimiter, map projection method name, right delimiter, { wkt separator, map projection parameter };
+map projection parameter  = 'PARAMETER', left delimiter, parameter name, wkt separator, parameter value, right delimiter;
+parameter value           = number;
+
+coordinate system = cs unit;
+coordinate system = [ { axis, wkt separator } ], cs unit;
+axis              = 'AXIS', left delimiter, axis name, wkt separator, ( 'north' | 'east' | 'south' | 'west' | 'up' | 'down' | 'other' ), right delimiter;
+
+(* Backward compatibility of coordinate reference systems *)
+geocentric crs    = 'GEOCCS', left delimiter, crs name, wkt separator, datum, wkt separator, prime meridian, [ { wkt separator, axis } ], wkt separator, axis unit, right delimiter;
+geographic crs    = 'GEOGCS', left delimiter, crs name, wkt separator, datum, wkt separator, prime meridian, [ { wkt separator, axis } ], wkt separator, axis unit, right delimiter;
+datum             = 'DATUM', left delimiter, datum name, wkt separator, spheroid, right delimiter;
+spheroid          = ( 'ELLIPSOID' | 'SPHEROID' ), left delimiter, ellipsoid name, wkt separator, semi-major axis, wkt separator, inverse flattening, right delimiter;
+
+projected crs = 'PROJCS', left delimiter, crs name, wkt separator, geographic crs, wkt separator, map projection, [ { wkt separator, axis } ], wkt separator, axis unit, right delimiter;

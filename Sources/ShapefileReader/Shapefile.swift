@@ -115,7 +115,7 @@ public class DBFReader {
     public typealias DBFRecord = [Any]
     
     var fileHandle : FileHandle!
-    var numberOfRecords : Int!
+    public internal(set) var numberOfRecords : Int!
     var fileType : Int!
     var lastUpdate : String! // YYYY-MM-DD
     var fields : [[AnyObject]]!
@@ -318,7 +318,7 @@ public class SHPReader {
 
     var fileHandle : FileHandle!
     var shapeType : ShapeType = .nullShape
-    var bbox : (x_min:Double, y_min:Double, x_max:Double, y_max:Double) = (0.0,0.0,0.0,0.0) // Xmin, Ymin, Xmax, Ymax
+    public internal(set) var bbox : (x_min:Double, y_min:Double, x_max:Double, y_max:Double) = (0.0,0.0,0.0,0.0) // Xmin, Ymin, Xmax, Ymax
     var elevation : (z_min:Double, z_max:Double) = (0.0, 0.0)
     var measure : (m_min:Double, m_max:Double) = (0.0, 0.0)
     var shpLength : UInt64 = 0
@@ -497,9 +497,7 @@ public class SHXReader {
     var fileHandle : FileHandle!
     var shapeOffsets : [Int] = []
     
-    var numberOfShapes : Int {
-        return shapeOffsets.count
-    }
+    public var numberOfShapes: Int { shapeOffsets.count }
     
     init(url: URL) throws {
         self.fileHandle = try FileHandle(forReadingFrom: url)
@@ -572,18 +570,17 @@ public class PRJReader {
     }
 
     
-    public let cs: Varied<CoordinateSystem>
+    public let cs: CoordinateSystem
     
     
     init(url: URL) throws {
         let data = try Data(contentsOf: url)
-        cs = try WKTDecoder().decode(Varied<CoordinateSystem>.self, from: data)
+        guard let entity = try WKTDecoder().decode(Varied<CoordinateSystem>.self, from: data).entity else { throw Error.coordinateSystemNotDefined }
+        cs = entity
     }
     
     
     func coordinateConverter() throws -> (CGPoint) -> CLLocationCoordinate2D {
-        
-        guard let cs = cs.entity else { throw Error.coordinateSystemNotDefined }
         
         switch cs {
         case is GeographicCS where cs.name.range(of: "wgs.*84", options: [.regularExpression, .caseInsensitive]) != nil:

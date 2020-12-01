@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "ShapefileReader"
-  s.version      = "0.1.0"
+  s.version      = "1.0.0"
   s.summary      = "Reads data from files in Shapefile format."
 
   s.description  = <<-DESC
@@ -19,13 +19,13 @@ Internally, it builds the three following objects, depending on the available au
 
   s.authors      = { "Nicolas Seriot" => "nicolas.seriot@swissquote.ch", "Alexey Demin" => "dnv1ex@yahoo.com" }
 
-  s.swift_version = "4.1"
+  s.swift_version = "5.0"
 
-  s.ios.deployment_target = "10.0"
-  s.osx.deployment_target = "10.12"
+  s.ios.deployment_target = "9.0"
+  s.osx.deployment_target = "10.11"
 
   s.source       = { :git => "https://github.com/DnV1eX/ShapefileReader.git", :tag => "#{s.version}" }
 
-  s.source_files  = "Shapefile/Shapefile.swift", "vendor/BinUtils.swift", "vendor/CoordinateSystem.swift"
+  s.source_files  = "Sources/**/*.swift"
 
 end
