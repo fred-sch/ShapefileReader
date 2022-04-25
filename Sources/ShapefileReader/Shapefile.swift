@@ -12,9 +12,7 @@
 // https://raw.githubusercontent.com/GeospatialPython/pyshp/master/shapefile.py
 
 import Foundation
-import CoreGraphics
 import CoreLocation
-
 
 public enum ShapeType : Int {
     case nullShape = 0
