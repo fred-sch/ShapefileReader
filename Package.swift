@@ -21,10 +21,17 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "ShapefileReader",
-            dependencies: []),
+            dependencies: []
+        ),
         .testTarget(
             name: "ShapefileReaderTests",
             dependencies: ["ShapefileReader"],
             resources: [.copy("Kantone"), .copy("Example.wkt")]),
     ]
 )
+
+#if os(Linux)
+package.targets.first!.exclude = ["ShapefileExtensions.swift"]
+#endif
+
+

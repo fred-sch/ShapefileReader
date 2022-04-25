@@ -10,7 +10,6 @@
 import XCTest
 @testable import ShapefileReader
 
-
 final class ShapefileTests: XCTestCase {
         
     let dbfURL = Bundle.module.url(forResource: "Kantone/Kantone", withExtension: "dbf")!
@@ -180,16 +179,4 @@ final class ShapefileTests: XCTestCase {
             }
         }
     }
-    
-
-    static var allTests = [
-        ("testRecords", testRecords),
-        ("testShapes", testShapes),
-        ("testShx", testShx),
-        ("testPrj", testPrj),
-        ("testWKTParser", testWKTParser),
-        ("testWKTDecoder", testWKTDecoder),
-        ("testWrongFormats", testWrongFormats),
-        ("testCrashes", testCrashes),
-    ]
 }
