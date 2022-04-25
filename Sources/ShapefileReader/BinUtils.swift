@@ -7,6 +7,27 @@
 //
 
 import Foundation
+#if os(Linux)
+import Glibc
+#else
+import Darwin
+#endif
+
+// MARK: Determine Byte Order on Host
+let number: UInt32 = 0x12345678
+let converted = number.bigEndian
+enum Endianness {
+    case little
+    case big
+}
+var byteOrder: Endianness {
+    if number == converted {
+        return .big
+    } else {
+        return .little
+    }
+}
+
 
 // MARK: protocol UnpackedType
 
@@ -336,7 +357,7 @@ func pack(_ format:String, _ objects:[Any], _ stringEncoding:String.Encoding=Str
 
 func unpack(_ format:String, _ data:Data, _ stringEncoding:String.Encoding=String.Encoding.windowsCP1252) throws -> [Unpackable] {
     
-    assert(Int(OSHostByteOrder()) == OSLittleEndian, "\(#file) assumes little endian, but host is big endian")
+    assert(byteOrder == .little, "\(#file) assumes little endian, but host is big endian")
     
     let isBigEndian = isBigEndianFromMandatoryByteOrderFirstCharacter(format)
     
