@@ -149,9 +149,9 @@ public class DBFReader {
         self.headerLength = (a[5] as! Int)
         self.recordLengthFromHeader = (a[6] as! Int)
         
-        print("-- fileType:", fileType!)
-        print("-- lastUpdate:", lastUpdate!)
-        print("-- numberOfRecords:", numberOfRecords!)
+        // print("-- fileType:", fileType!)
+        // print("-- lastUpdate:", lastUpdate!)
+        // print("-- numberOfRecords:", numberOfRecords!)
         
         let numFields = (headerLength - 33) / 32
         
